@@ -1,0 +1,4 @@
+# Source PDFs stay local (copyrighted; kept out of the public repo)
+sources/
+
+.DS_Store

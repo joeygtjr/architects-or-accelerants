@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Architects or Accelerants? Social media, AI, and the path to violence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF1F3; --surface:#FFFFFF; --ink:#15202B; --muted:#56626E; --line:#C9D2D8;
+  --teal:#1E6B67; --teal-ink:#FFFFFF; --teal-soft:#D6E8E6;
+  --ember:#B96A00; --ember-bright:#E08A00; --ember-soft:#F6E3C2;
+  --night:#101A22; --night-2:#18252F; --night-ink:#E6ECEF; --night-muted:#93A2AE; --night-line:#2B3A46;
+  --focus:#2C5BD6;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#11181E; --surface:#18222A; --ink:#E4EAEE; --muted:#9AA7B2; --line:#2E3B46;
+    --teal:#45A59E; --teal-ink:#07201E; --teal-soft:#15312F;
+    --ember:#F0A93A; --ember-bright:#F0A93A; --ember-soft:#3A2C14;
+    --night:#0A1116; --night-2:#131E26; --focus:#7FA4FF;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#11181E; --surface:#18222A; --ink:#E4EAEE; --muted:#9AA7B2; --line:#2E3B46;
+  --teal:#45A59E; --teal-ink:#07201E; --teal-soft:#15312F;
+  --ember:#F0A93A; --ember-bright:#F0A93A; --ember-soft:#3A2C14;
+  --night:#0A1116; --night-2:#131E26; --focus:#7FA4FF;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+button{font:inherit;color:inherit}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.narrow{max-width:42rem}
+section{padding:96px 0}
+section + section{border-top:1px solid var(--line)}
+h2{font-size:clamp(1.9rem,4vw,2.9rem);line-height:1.08;font-weight:800;letter-spacing:-0.025em;margin:0 0 18px}
+h3{font-size:1.3rem;line-height:1.25;margin:0 0 8px;letter-spacing:-0.01em}
+.intro{font-size:1.12rem;color:var(--muted);margin:0 0 40px;max-width:40rem}
+.intro strong{color:var(--ink)}
+.note{font-size:.82rem;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;background:color-mix(in srgb,var(--night) 92%,transparent);
+  backdrop-filter:blur(8px);color:var(--night-ink);padding-top:env(safe-area-inset-top,0px)}
+.nav .wrap{display:flex;align-items:center;gap:24px;height:56px}
+.nav .brand{font-weight:800;font-size:.95rem;white-space:nowrap;text-decoration:none}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a.l{display:block;font-size:.85rem;padding:6px 10px;border-radius:4px;text-decoration:none;color:var(--night-muted);white-space:nowrap}
+.nav a.l.on{color:var(--night-ink);background:var(--night-2)}
+.progress{position:absolute;left:0;bottom:0;height:2px;background:var(--ember-bright);width:0}
+@media (max-width:760px){.nav .brand{display:none}}
+
+/* hero */
+.hero{background:var(--night);color:var(--night-ink);padding:140px 0 80px;border:0}
+.hero h1{font-size:clamp(3rem,9vw,7.2rem);line-height:.95;font-weight:900;letter-spacing:-0.045em;margin:0 0 28px;max-width:12ch}
+.hero .sub{font-size:clamp(1.1rem,2vw,1.35rem);color:var(--night-muted);max-width:38rem;margin:0 0 56px}
+.funnel{background:var(--night-2);border-radius:8px;padding:24px 24px 16px;margin-bottom:48px}
+.funnel svg{display:block;width:100%;height:auto}
+.funnel .cap{font-size:.85rem;color:var(--night-muted);margin:10px 0 0}
+.poll h2{font-size:1.25rem;letter-spacing:-0.01em;margin:0 0 14px}
+.poll .opts{display:flex;flex-wrap:wrap;gap:12px}
+.poll button{background:transparent;border:1px solid var(--night-line);color:var(--night-ink);border-radius:6px;
+  padding:14px 18px;cursor:pointer;text-align:left;max-width:22rem}
+.poll button strong{display:block;font-size:1.05rem}
+.poll button span{display:block;font-size:.88rem;color:var(--night-muted)}
+.poll button:hover{border-color:var(--night-muted)}
+.poll button[aria-pressed="true"]{border-color:var(--ember-bright);background:rgba(224,138,0,.12)}
+.poll .ack{font-size:.9rem;color:var(--night-muted);min-height:1.5em;margin:12px 0 0}
+
+@media (max-width:640px){
+  .funnel{overflow-x:auto;padding:16px}.funnel svg{min-width:620px}
+  .ages{overflow-x:auto;padding:18px}.ages svg{min-width:760px}
+  .cmp{min-width:540px}
+  section{padding:72px 0}
+}
+/* timeline */
+.tl{position:relative;margin:8px 0 28px}
+.tl .axis{position:absolute;left:0;right:0;top:85px;height:2px;background:var(--line)}
+.tl .nodes{position:relative;height:170px;margin:0 60px}
+.node{position:absolute;top:0;height:170px;width:128px;transform:translateX(-50%);background:none;border:0;cursor:pointer;padding:0}
+.node .dot{position:absolute;left:50%;top:76px;margin-left:-10px;width:20px;height:20px;border-radius:50%;background:var(--surface);border:3px solid var(--ink);transition:box-shadow .2s}
+.node .lab{position:absolute;left:0;right:0;text-align:center}
+.node.up .lab{bottom:100px}.node.down .lab{top:100px}
+.node .pl{display:block;font-weight:700;font-size:.92rem;line-height:1.2}
+.node .yr{display:block;font-size:.76rem;color:var(--muted)}
+.node:hover .dot{box-shadow:0 0 0 5px var(--line)}
+.node[aria-pressed="true"] .dot{background:var(--ember-bright);border-color:var(--ember-bright);box-shadow:0 0 0 6px var(--ember-soft)}
+@media (max-width:760px){
+  .tl .axis{display:none}
+  .tl .nodes{height:auto;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .node{position:static;transform:none;width:auto;height:auto;border:1px solid var(--line);border-radius:6px;padding:10px 6px;background:var(--surface)}
+  .node .dot{position:static;display:block;margin:0 auto 6px}
+  .node .lab{position:static}
+}
+.casebox{display:grid;grid-template-columns:1.1fr 1fr;gap:0;overflow:hidden}
+@media (max-width:820px){.casebox{grid-template-columns:1fr}}
+.casebox .l{padding:28px}
+.casebox .r{padding:28px;background:var(--teal-soft)}
+.casebox .meta{font-size:.9rem;color:var(--muted);margin:0 0 14px}
+.casebox dl{margin:0}
+.casebox dt{font-weight:700;font-size:.85rem;margin-top:14px}
+.casebox dd{margin:2px 0 0;font-size:.95rem}
+.pill{display:inline-block;font-size:.78rem;font-weight:600;padding:3px 9px;border-radius:3px;background:var(--ember-soft);margin-right:6px}
+
+/* camps */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:0}
+.tab{background:transparent;border:1px solid var(--line);border-bottom:0;border-radius:6px 6px 0 0;padding:12px 18px;cursor:pointer;text-align:left}
+.tab strong{display:block}
+.tab span{font-size:.82rem;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--surface);border-color:var(--line);box-shadow:inset 0 3px 0 var(--ink)}
+.panel{border-radius:0 6px 6px 6px;padding:32px;display:grid;grid-template-columns:1.3fr 1fr;gap:40px}
+@media (max-width:820px){.panel{grid-template-columns:1fr;padding:22px}}
+.panel .claim{font-size:1.6rem;line-height:1.2;font-weight:800;letter-spacing:-0.02em;margin:0 0 16px}
+.panel p{margin:0 0 14px}
+.panel h4{font-size:.9rem;margin:0 0 10px}
+.ev{list-style:none;margin:0 0 20px;padding:0}
+.ev li{display:flex;align-items:center;gap:10px;font-size:.9rem;padding:5px 0;color:var(--muted)}
+.ev li i{width:12px;height:12px;border-radius:2px;border:2px solid var(--line);flex:none}
+.ev li.on{color:var(--ink);font-weight:600}
+.ev li.on i{background:var(--teal);border-color:var(--teal)}
+.voices{font-size:.88rem;color:var(--muted)}
+.blind{border-left:3px solid var(--ember-bright);padding-left:14px;font-size:.95rem}
+.callout{margin-top:28px;padding:22px 26px;border-radius:6px;background:var(--ink);color:var(--paper);font-size:1.1rem;max-width:48rem}
+
+/* numbers */
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:900px){.nums{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.nums{grid-template-columns:1fr}}
+.num{padding:22px;display:flex;flex-direction:column}
+.num .big{font-size:3rem;line-height:1;font-weight:900;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;margin:0 0 10px}
+.num p{margin:0 0 14px;font-size:.95rem}
+.num .viz{margin-top:auto}
+.num .src{font-size:.75rem;color:var(--muted);margin-top:10px}
+
+/* pathway */
+.pw{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:900px){.pw{grid-template-columns:1fr}}
+.controls{display:flex;flex-wrap:wrap;gap:24px 40px;padding:22px 24px;margin-bottom:28px}
+.controls h3{font-size:.95rem;margin:0 0 10px}
+.controls p{font-size:.84rem;color:var(--muted);margin:8px 0 0;max-width:24rem}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.seg button{background:transparent;border:0;border-right:1px solid var(--line);padding:8px 16px;cursor:pointer;font-size:.92rem}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.toggles{display:flex;flex-wrap:wrap;gap:10px}
+.tog{display:inline-flex;align-items:center;gap:10px;cursor:pointer;background:transparent;border:1px solid var(--line);border-radius:4px;padding:8px 14px;font-size:.92rem}
+.tog .sw{width:28px;height:16px;border-radius:8px;background:var(--line);position:relative;transition:background .2s}
+.tog .sw::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--surface);transition:transform .2s}
+.tog[aria-pressed="true"]{border-color:var(--ember-bright);background:var(--ember-soft)}
+.tog[aria-pressed="true"] .sw{background:var(--ember-bright)}
+.tog[aria-pressed="true"] .sw::after{transform:translateX(12px)}
+.origin{font-size:.9rem;color:var(--muted);padding:0 0 12px 18px;border-left:3px solid var(--line)}
+.stage{display:block;width:100%;text-align:left;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--ink);border-radius:4px;padding:14px 18px}
+.stage:hover{border-color:var(--ink)}
+.stage[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.stage .n{font-weight:800;font-size:.85rem;color:var(--muted);margin-right:10px}
+.stage .nm{font-weight:700;font-size:1.12rem}
+.stage .sub{display:block;font-size:.88rem;color:var(--muted)}
+.gap{padding:12px 0 12px 18px;border-left:3px solid var(--line);transition:border-color .3s}
+.gap.hot{border-left-color:var(--ember-bright)}
+.gap-label{font-size:.8rem;color:var(--muted);margin:0 0 8px}
+.bars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+@media (max-width:520px){.bars{grid-template-columns:1fr}}
+.bar{font-size:.8rem;line-height:1.3;padding:9px 10px;border-radius:3px;min-height:58px;background:var(--teal);color:var(--teal-ink);border:2px solid var(--teal);transition:background .3s,color .3s,border-color .3s}
+.bar .why{display:block;font-size:.72rem;margin-top:4px;opacity:.85}
+.bar.weak{background:transparent;color:var(--ink);border-style:dashed}
+.bar.gone{background:transparent;color:var(--muted);border:2px dashed var(--ember-bright)}
+.bar.gone .t{text-decoration:line-through;text-decoration-color:var(--ember-bright)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:.8rem;color:var(--muted);margin:16px 0 0}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:18px;height:12px;border-radius:2px}
+.legend .l1{background:var(--teal)}.legend .l2{border:2px dashed var(--teal)}.legend .l3{border:2px dashed var(--ember-bright)}
+.side{position:sticky;top:76px}
+@media (max-width:900px){.side{position:static}}
+.readout{background:var(--ink);color:var(--paper);border-radius:6px;padding:20px 22px;margin-bottom:18px}
+.readout .count{font-size:2rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.readout .count small{font-size:.9rem;font-weight:500;opacity:.75;margin-left:6px}
+.readout p{margin:10px 0 0;font-size:.95rem}
+.detail{padding:22px 24px}
+.detail h3{font-size:1.35rem;margin:0 0 4px}
+.detail h4{font-size:.92rem;margin:16px 0 3px}
+.detail p{margin:0;font-size:.94rem}
+
+/* scorecard */
+.score{width:100%;border-collapse:separate;border-spacing:4px;font-size:.9rem}
+.scroll-x{overflow-x:auto}
+.score th{font-size:.82rem;text-align:left;font-weight:700;padding:6px 8px;vertical-align:bottom}
+.score th.rowh{white-space:nowrap;vertical-align:middle}
+.score th small{display:block;font-weight:500;color:var(--muted)}
+.score td{padding:0}
+.score td button{width:100%;min-width:120px;height:56px;border:0;border-radius:4px;cursor:pointer;font-size:.8rem;font-weight:600;padding:4px 8px}
+.lv0 button{background:var(--surface);color:var(--muted);border:1px dashed var(--line)!important}
+.lv1 button{background:var(--teal-soft);color:var(--ink)}
+.lv2 button{background:var(--teal);color:var(--teal-ink)}
+.lvA button{background:var(--ember-bright);color:#1b1200}
+.score td button[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:1px}
+.scorenote{margin-top:16px;padding:18px 20px;min-height:84px}
+.scorenote strong{display:block}
+.keys{display:flex;flex-wrap:wrap;gap:16px;font-size:.8rem;color:var(--muted);margin-top:12px}
+.keys span{display:inline-flex;align-items:center;gap:6px}
+.keys i{width:16px;height:12px;border-radius:2px;display:inline-block}
+
+/* youth */
+.ages{padding:26px 26px 18px;margin-bottom:24px}
+.ages svg{display:block;width:100%;height:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+.pieces{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.piece{padding:16px}
+.piece h4{margin:0 0 4px;font-size:1rem}
+.piece p{margin:8px 0 0;font-size:.86rem;color:var(--muted)}
+.meter{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--ink);border-radius:4px}
+.picto{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 8px}
+.picto svg{width:30px;height:auto}
+
+/* companion compare */
+.cmp{display:grid;grid-template-columns:minmax(150px,1.2fr) repeat(3,minmax(90px,1fr));border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.cmp > div{padding:12px 14px;border-bottom:1px solid var(--line);font-size:.9rem;display:flex;align-items:center}
+.cmp .h{font-weight:700;background:var(--paper);font-size:.88rem}
+.cmp .h button{background:none;border:0;padding:0;cursor:pointer;font-weight:700;text-align:left}
+.cmp .c{justify-content:center;gap:6px;font-size:.8rem;color:var(--muted)}
+.cmp .c b{font-size:1.1rem;line-height:1}
+.cmp .hl{background:var(--ember-soft)}
+.cmp .grp{grid-column:1/-1;background:var(--paper);font-size:.78rem;font-weight:700;color:var(--muted);padding:8px 14px}
+.cmpnote{margin-top:16px;font-size:1rem;max-width:44rem}
+
+/* loop */
+.dark{background:var(--night);color:var(--night-ink);border:0}
+.dark .intro{color:var(--night-muted)}
+.dark .intro strong{color:var(--night-ink)}
+.loopgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:center}
+@media (max-width:900px){.loopgrid{grid-template-columns:1fr}}
+.loop svg{display:block;width:100%;max-width:520px;margin:0 auto;height:auto}
+.chain{list-style:none;margin:0 0 24px;padding:0;border-left:2px solid var(--night-line)}
+.chain li{padding:0 0 18px 20px;position:relative}
+.chain li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--night);border:2px solid var(--ember-bright)}
+.chain b{display:block}
+.chain span{color:var(--night-muted);font-size:.92rem}
+.brk{background:var(--ember-bright);color:#1b1200;border:0;border-radius:4px;padding:10px 18px;font-weight:700;cursor:pointer}
+.brk[aria-pressed="true"]{background:var(--teal);color:#fff}
+.fixes{margin:18px 0 0;padding:0;list-style:none;display:none}
+.fixes.show{display:block}
+.fixes li{padding:10px 14px;border:1px solid var(--night-line);border-radius:4px;margin-bottom:8px;font-size:.93rem}
+.twowk{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.twowk div{padding:14px;border:1px solid var(--night-line);border-radius:4px;font-size:.88rem;color:var(--night-muted)}
+.twowk b{display:block;color:var(--night-ink);font-size:1rem}
+
+/* warnings */
+.wbar{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:18px}
+.wgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:900px){.wgrid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.wgrid{grid-template-columns:1fr}}
+.w{padding:16px;transition:background .3s,border-color .3s}
+.w h4{margin:0 0 6px;font-size:1rem}
+.w p{margin:0;font-size:.86rem;color:var(--muted)}
+.w.lit{border-color:var(--ember-bright);background:var(--ember-soft)}
+.w.lit p{color:var(--ink)}
+.machine{margin-top:20px;padding:22px 24px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.machine svg{width:72px;height:72px}
+@media (max-width:560px){.machine{grid-template-columns:1fr}}
+
+/* verdict */
+.findings{counter-reset:f;list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.findings li{counter-increment:f;padding:18px 20px 18px 64px;position:relative}
+.findings li::before{content:counter(f);position:absolute;left:20px;top:16px;font-weight:900;font-size:1.5rem;color:var(--ember)}
+.findings b{display:block;font-size:1.05rem}
+.findings span{font-size:.93rem;color:var(--muted)}
+.pollres{padding:22px 24px;margin-bottom:28px;border-left:6px solid var(--ember-bright)}
+.pollres p{margin:0}
+
+/* recs */
+.recs details{margin-bottom:10px}
+.recs summary{list-style:none;cursor:pointer;padding:18px 22px;display:flex;gap:16px;align-items:baseline}
+.recs summary::-webkit-details-marker{display:none}
+.recs summary .k{font-weight:900;color:var(--ember);font-size:1.2rem;flex:none;width:1.4rem}
+.recs summary b{font-size:1.1rem}
+.recs summary .plus{margin-left:auto;font-weight:700;color:var(--muted)}
+.recs details[open] summary .plus{transform:rotate(45deg)}
+.recs .body{padding:0 22px 22px 60px;display:grid;grid-template-columns:1.4fr 1fr;gap:24px}
+@media (max-width:760px){.recs .body{grid-template-columns:1fr;padding-left:22px}}
+.recs .body p{margin:0;font-size:.95rem}
+.recs .risk{border-left:3px solid var(--ember-bright);padding-left:14px;font-size:.9rem}
+.recs .risk b{display:block;font-size:.85rem;margin-bottom:2px}
+
+/* quiz */
+.quiz{padding:28px}
+.qprog{font-size:.85rem;color:var(--muted);margin-bottom:6px}
+.qtext{font-size:1.3rem;font-weight:700;line-height:1.3;margin:0 0 18px}
+.qopts{display:grid;gap:8px}
+.qopts button{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:12px 16px;cursor:pointer}
+.qopts button:hover:not(:disabled){border-color:var(--ink)}
+.qopts button.right{background:var(--teal);color:var(--teal-ink);border-color:var(--teal)}
+.qopts button.wrong{border-color:var(--ember-bright);background:var(--ember-soft)}
+.qfb{margin:16px 0 0;min-height:1.6em}
+.qnext{margin-top:16px;background:var(--ink);color:var(--paper);border:0;border-radius:4px;padding:10px 18px;font-weight:700;cursor:pointer}
+
+/* close */
+.close{background:var(--night);color:var(--night-ink);border:0;padding:120px 0}
+.close blockquote{margin:0;font-size:clamp(1.8rem,4.2vw,3.2rem);line-height:1.12;font-weight:800;letter-spacing:-0.03em;max-width:20ch}
+.close p{color:var(--night-muted);max-width:40rem;margin:28px 0 0;font-size:1.05rem}
+footer{padding:48px 0 64px;font-size:.82rem;color:var(--muted)}
+footer h3{font-size:.95rem;color:var(--ink)}
+footer ul{columns:2;column-gap:32px;padding-left:18px;margin:0}
+@media (max-width:700px){footer ul{columns:1}}
+footer li{margin-bottom:6px;break-inside:avoid}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <a class="brand" href="#top">Architects or Accelerants?</a>
+    <ul>
+      <li><a class="l" href="#cases">Six cases</a></li>
+      <li><a class="l" href="#debate">The debate</a></li>
+      <li><a class="l" href="#numbers">The record</a></li>
+      <li><a class="l" href="#pathway">Pathway</a></li>
+      <li><a class="l" href="#scorecard">Scorecard</a></li>
+      <li><a class="l" href="#youth">Who</a></li>
+      <li><a class="l" href="#companion">Companions</a></li>
+      <li><a class="l" href="#copycat">Copycats</a></li>
+      <li><a class="l" href="#warning">Warning signs</a></li>
+      <li><a class="l" href="#verdict">Findings</a></li>
+      <li><a class="l" href="#recs">What to do</a></li>
+    </ul>
+  </div>
+  <div class="progress" id="progress"></div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <h1>Architects or accelerants?</h1>
+    <p class="sub">Do social media and AI create violent extremists, or speed up people who were already on the way? The answer decides where prevention money goes, and what it costs in speech, privacy, and trust.</p>
+
+    <figure class="funnel" aria-labelledby="funcap">
+      <svg id="funnel" viewBox="0 0 1000 250" role="img" aria-label="Many dots representing people with grievances start on the left. Most drop away before extreme belief, and nearly all drop away before violence. One reaches the end."></svg>
+      <figcaption class="cap" id="funcap">Grievances are common. Extreme belief is less common. Violence is rare. The question for this project is what technology does to that gap. Illustrative, not to scale.</figcaption>
+    </figure>
+
+    <div class="poll">
+      <h2>Before you scroll, which do you think is closer to the truth?</h2>
+      <div class="opts">
+        <button data-p="arch" aria-pressed="false"><strong>Architect</strong><span>Algorithms and AI build the path to violence.</span></button>
+        <button data-p="acc" aria-pressed="false"><strong>Accelerant</strong><span>They speed up a path people were already walking.</span></button>
+      </div>
+      <p class="ack" id="pollack" aria-live="polite"></p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="cases">
+  <div class="wrap">
+    <h2>Six attacks and plots. Every path ran through a screen.</h2>
+    <p class="intro">Four countries, seven years, several ideological profiles, or none at all. This project tests the competing theories against each case. <strong>Select a case</strong> to see what the documented record actually shows. Attackers are identified by place, not name, to avoid feeding the copycat cycle described later.</p>
+    <div class="tl">
+      <div class="axis"></div>
+      <div class="nodes" id="nodes"></div>
+    </div>
+    <div class="card casebox" id="casebox" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="debate">
+  <div class="wrap">
+    <h2>Two camps and a critique, reading different evidence.</h2>
+    <p class="intro">The field says two things at once. The disagreement is sharper than it looks, because each side relies on a different kind of study. <strong>Compare the positions</strong> and the evidence each one stands on.</p>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="card panel" role="tabpanel" id="panel"></div>
+    <p class="callout">Read carefully, the leading architecture paper already concedes the key point: Kunst et al. (2026) conclude algorithms likely help people who already have intent or vulnerability, rather than imposing extremism on passive users.</p>
+  </div>
+</section>
+
+<section id="numbers">
+  <div class="wrap">
+    <h2>The record in six numbers.</h2>
+    <p class="intro">Each figure comes from a source in the project. Together they show a technology built to reward outrage, adopted at unprecedented speed, and increasingly present in the lives of young attackers.</p>
+    <div class="nums">
+      <div class="card num">
+        <div class="big">5&times;</div>
+        <p>From 2017, Facebook's ranking system weighted an angry emoji reaction five times more than a like. Its own data scientists later found angry-reaction posts were disproportionately likely to carry misinformation and toxicity.</p>
+        <div class="viz" id="v-emoji"></div>
+        <div class="src">Merrill &amp; Oremus (2021)</div>
+      </div>
+      <div class="card num">
+        <div class="big">~30%</div>
+        <p>Share of people arrested on terrorism suspicion in EU member states in 2024 who were aged 12 to 20. Most juvenile offenders were convicted of preparatory or material offenses, not violence.</p>
+        <div class="viz picto" id="v-picto" aria-hidden="true"></div>
+        <div class="src">Mehra &amp; Herbach (2026)</div>
+      </div>
+      <div class="card num">
+        <div class="big">627</div>
+        <p>Posts the Pittsburgh attacker made on the low-moderation platform Gab in ten months. Few people offline were positioned to notice. Online, the fixation was plainly visible.</p>
+        <div class="viz" id="v-grid" aria-hidden="true"></div>
+        <div class="src">Amman, Kupper &amp; Meloy (2026)</div>
+      </div>
+      <div class="card num">
+        <div class="big">5,000+</div>
+        <p>Messages the Windsor Castle intruder exchanged with a Replika AI companion he named Sarai, including discussion of his plan. The companion validated rather than challenged.</p>
+        <div class="viz" id="v-chat" aria-hidden="true"></div>
+        <div class="src">Glazzard et al. (2026); Kunst et al. (2026)</div>
+      </div>
+      <div class="card num">
+        <div class="big">72%</div>
+        <p>Share of TRAP-18 warning indicators present before the Pittsburgh attack, including four proximal warning behaviors. He was, in the authors' phrase, a gray man on no one's radar.</p>
+        <div class="viz" id="v-donut" aria-hidden="true"></div>
+        <div class="src">Amman, Kupper &amp; Meloy (2026)</div>
+      </div>
+      <div class="card num">
+        <div class="big">5 days</div>
+        <p>Time it took ChatGPT to pass one million users after release in 2022. Within three years the same technology appeared in the record of a school stabbing and a bomb-making case.</p>
+        <div class="viz" id="v-adopt" aria-hidden="true"></div>
+        <div class="src">Roose (2022); Solea (2025); US v. Gann (2025)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pathway">
+  <div class="wrap">
+    <h2>The fuel is human. AI clears the firebreaks.</h2>
+    <p class="intro">Kunst et al. (2026) map radicalization in four stages and argue AI acts as a catalyst that removes the ordinary friction stopping most people partway. <strong>Set the conditions</strong> and watch which barriers weaken. Select a stage for what it looks like and where to intervene.</p>
+    <div class="card controls">
+      <div>
+        <h3 id="vlab">Predisposing vulnerability</h3>
+        <div class="seg" role="group" aria-labelledby="vlab" id="vuln">
+          <button data-v="0" aria-pressed="false">Low</button>
+          <button data-v="1" aria-pressed="true">Moderate</button>
+          <button data-v="2" aria-pressed="false">High</button>
+        </div>
+        <p>Isolation, identity uncertainty, need for certainty, grievance.</p>
+      </div>
+      <div>
+        <h3 id="alab">AI accelerants</h3>
+        <div class="toggles" role="group" aria-labelledby="alab">
+          <button class="tog" data-a="rec" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Recommendation engine</button>
+          <button class="tog" data-a="swarm" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Bot swarms</button>
+          <button class="tog" data-a="comp" aria-pressed="false"><span class="sw" aria-hidden="true"></span>AI companion</button>
+        </div>
+        <p>Each one targets a different kind of friction.</p>
+      </div>
+    </div>
+    <div class="pw">
+      <div id="path"></div>
+      <aside class="side">
+        <div class="readout" aria-live="polite"><div class="count" id="count"></div><p id="summary"></p></div>
+        <div class="card detail" id="detail" aria-live="polite"></div>
+      </aside>
+    </div>
+    <p class="note" style="margin-top:20px">Illustrative model for training, not a risk tool. People stall, cycle, skip stages, and exit. Barrier mappings are simplified from Kunst et al. (2026) and Simi &amp; Windisch (2017).</p>
+  </div>
+</section>
+
+<section id="scorecard">
+  <div class="wrap">
+    <h2>Tested against the cases, one column stays empty.</h2>
+    <p class="intro">Each case coded against the four stages. <strong>The first column is blank</strong>: no case shows a previously uncommitted person delivered to extremism by a recommendation engine. The last column is full: technology is present at the point of action in all six. Select any cell for the evidence.</p>
+    <div class="scroll-x"><table class="score" id="score"></table></div>
+    <div class="keys">
+      <span><i style="border:1px dashed var(--line);background:var(--surface)"></i>Not established</span>
+      <span><i style="background:var(--teal-soft)"></i>Partial or diffuse</span>
+      <span><i style="background:var(--teal)"></i>Documented</span>
+      <span><i style="background:var(--ember-bright)"></i>AI in the record</span>
+    </div>
+    <div class="card scorenote" id="scorenote" aria-live="polite"><strong>Select a cell</strong><span class="note">The coding follows the project's case analysis.</span></div>
+  </div>
+</section>
+
+<section id="youth">
+  <div class="wrap">
+    <h2>The people radicalizing have changed. The models have not.</h2>
+    <p class="intro">The most consequential effect is not on who gets recruited into existing movements. It is a new population: <strong>young, ideologically thin or mixed, fixated on violence itself, and attached to no organization.</strong></p>
+    <div class="card ages">
+      <h3>Ages in the record, against the age of criminal responsibility</h3>
+      <svg id="ages" viewBox="0 0 1000 272" role="img" aria-label="Age scale from 8 to 20. Children as young as 8 targeted via gaming platforms. Cases at ages 12, 14, 15, 16, and 17. Criminal responsibility begins at 10 in the UK, 12 in the Netherlands, and 14 in Germany."></svg>
+      <p class="note">Sources: Ware (2026); Mehra &amp; Herbach (2026); Solea (2025).</p>
+    </div>
+    <div class="two">
+      <div>
+        <h3>The puzzle pieces don't fit anymore</h3>
+        <p class="note" style="margin:0 0 14px">Hafez &amp; Mullins (2015) explain radicalization as four interlocking pieces. For this population, three are distorted and one is nearly missing.</p>
+        <div class="pieces" id="pieces"></div>
+      </div>
+      <div class="card" style="padding:24px">
+        <h3>Why this population is dangerous</h3>
+        <p>Simi &amp; Windisch (2017) found most committed extremists never commit mass violence because something stops them. Three of their four barriers depend on other people.</p>
+        <ul style="padding-left:18px;margin:0 0 14px">
+          <li><b>Sorting:</b> organizations steer members away from mass-casualty violence.</li>
+          <li><b>Disillusionment:</b> people become disappointed with the group or its leaders.</li>
+          <li><b>Changes in focus:</b> life, jobs, and relationships pull people away.</li>
+          <li><b>Moral apprehension:</b> the person balks at harming innocents.</li>
+        </ul>
+        <p style="margin:0">A diffuse online milieu has no membership to be sorted out of and no leadership to become disillusioned with. That is why the kill-or-capture tools built after 2001, which assume an organization to dismantle, fit poorly (Ware 2026).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="companion">
+  <div class="wrap">
+    <h2>A group radicalizes and restrains. A companion only does the first.</h2>
+    <p class="intro">Friendship and kinship ties are among the strongest predictors of radicalization. They are also where the brakes live. The Windsor case suggests an AI companion can fill the network's place while <strong>supplying none of its brakes</strong>. Select a column to compare.</p>
+    <div class="scroll-x"><div class="cmp" id="cmp"></div></div>
+    <p class="cmpnote">The caveat matters: this rests on one documented case and theory. Kunst et al. (2026) call the leap from chatbot validation to acting on it poorly understood. It belongs on the research agenda, and it matters most because isolated adolescents seeking validation are exactly who an always-agreeable companion attracts.</p>
+  </div>
+</section>
+
+<section id="copycat" class="dark">
+  <div class="wrap">
+    <h2>The attacker becomes the content that radicalizes the next one.</h2>
+    <p class="intro">No stage model includes this. Amman, Kupper &amp; Meloy (2026) document how <strong>completed attacks circulate as instruction and inspiration</strong>, and platforms carry the script long after the attacker is imprisoned.</p>
+    <div class="loopgrid">
+      <div class="loop"><svg id="loop" viewBox="0 0 520 520" role="img" aria-label="A loop: attack, then manifesto and recording, then circulation online, then study by the next attacker, then another attack."></svg></div>
+      <div>
+        <ol class="chain">
+          <li><b>The Pittsburgh attacker studied earlier shooters</b><span>including for tactical lessons about weapon reliability.</span></li>
+          <li><b>Poway, California, April 2019</b><span>The next synagogue attacker referenced Pittsburgh five times in his manifesto.</span></li>
+          <li><b>Buffalo, New York, May 2022</b><span>A supermarket attacker referenced him and wrote his name on his weapon.</span></li>
+          <li><b>Accelerationist publications</b><span>invoked him repeatedly as a model.</span></li>
+        </ol>
+        <button class="brk" id="brk" aria-pressed="false">Show how to break the loop</button>
+        <ul class="fixes" id="fixes">
+          <li>Don't circulate attacker names, faces, or manifestos in coverage, briefings, or training.</li>
+          <li>Suppress sharing of attack footage and the tactical lessons drawn from it.</li>
+          <li>Judge programs by whether they reduce script availability, not by takedown volume.</li>
+        </ul>
+        <div class="twowk">
+          <div><b>Contagion</b>An acute rise in attacks for about two weeks after heavy publicity.</div>
+          <div><b>Copycat</b>A chronic process: the act and actor are imitated until they become a subcultural script.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="warning">
+  <div class="wrap">
+    <h2>What practitioners can actually see.</h2>
+    <p class="intro">Profiling fails because radical belief is common and violence is rare. Behavior near the point of action is different. These are the eight proximal warning behaviors in TRAP-18, the protocol used in the Pittsburgh examination.</p>
+    <div class="wbar">
+      <button class="tog" id="pgh" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Show what was present before Pittsburgh</button>
+    </div>
+    <div class="wgrid" id="wgrid"></div>
+    <div class="card machine">
+      <svg viewBox="0 0 72 72" aria-hidden="true"><rect x="6" y="10" width="60" height="40" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><path d="M20 50 L16 62 L32 50" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><circle cx="24" cy="30" r="3" fill="currentColor"/><circle cx="36" cy="30" r="3" fill="currentColor"/><circle cx="48" cy="30" r="3" fill="var(--ember-bright)"/></svg>
+      <div>
+        <h3>A new place for leakage: machines</h3>
+        <p style="margin:0">Leakage used to mean telling a friend, posting online, or writing it down. The Windsor intruder discussed his plan with an AI companion. The Pirkkala attacker reportedly drafted with ChatGPT and sent his manifesto to a newspaper before the attack. Intent now surfaces in private channels no bystander sees, which is why safety testing should cover how models respond to escalating violent ideation over long conversations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="verdict">
+  <div class="wrap">
+    <h2>The verdict: accelerant, environment, and a moving target.</h2>
+    <div class="card pollres" id="pollres"><p>You didn't pick a side at the top. That's fine. Here's where the evidence lands.</p></div>
+    <ol class="findings">
+      <li class="card"><b>The evidence supports acceleration, not causation.</b><span>Technology effects concentrate in reinforcement and belonging, not first exposure. People who consume extremist video arrive already resentful, mostly through subscriptions and off-platform links (Shaw 2023). An accelerant is not harmless: reinforcement is where the process is usually decided.</span></li>
+      <li class="card"><b>Generative AI is an instrument, and instruments matter.</b><span>In the record it drafts, plans, and validates. It shortens the path to capability, and it lowers the cost of the manifesto and the recording, which are central to attacks designed as communication (Jiang &amp; Wilson 2025).</span></li>
+      <li class="card"><b>The radicalizing population has shifted, and the frameworks haven't caught up.</b><span>Young, ideologically thin, violence-fixated, unaffiliated. Platforms don't hand them an ideology. They make violence available, supply an audience, and provide the validation a group once did.</span></li>
+      <li class="card"><b>AI companions may occupy the structural position of the network.</b><span>They validate and are always available, but cannot sort anyone away from violence or disappoint them. One documented case so far; a priority for research.</span></li>
+      <li class="card"><b>The target is moving faster than the evidence.</b><span>The strongest studies describe platforms from 2017 to 2021. Policy built on a settled reading will be built for the last generation of technology. The answer is durable monitoring capacity.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="recs">
+  <div class="wrap">
+    <h2>What leaders can do, and what each choice costs.</h2>
+    <p class="intro">Every recommendation carries a trade-off. <strong>Open each one</strong> to see both.</p>
+    <div class="recs" id="recslist"></div>
+    <p class="callout">Calling AI an accelerant is not a license to do nothing. Grievance, humiliation, misogyny, isolation, and violence as an available script are the drivers. They are harder to legislate than an algorithm, and regulating the accelerant because the fuel is politically hard will not work.</p>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="wrap">
+    <h2>Check your understanding.</h2>
+    <p class="intro">Four questions drawn from the findings.</p>
+    <div class="card quiz narrow" id="quizbox" aria-live="polite"></div>
+  </div>
+</section>
+</main>
+
+<section class="close">
+  <div class="wrap">
+    <blockquote>The question is no longer whether people radicalize online. It is what happens when the systems people talk to are built to agree with them.</blockquote>
+    <p>The threat is not that machines are recruiting people. It is that the social structures that once both radicalized and restrained have been replaced by environments that only do the first.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h3>Sources</h3>
+    <ul>
+      <li>Amman, Kupper &amp; Meloy (2026), Tree of Life Synagogue Attack: A TRAP-18 Examination, <i>Behavioral Sciences &amp; the Law</i></li>
+      <li>Baele, Naserian &amp; Katz (2025), Is AI-Generated Extremism Credible?, <i>Terrorism and Political Violence</i></li>
+      <li>Glazzard, McIlhatton &amp; Martin (2026), Will Generative AI Fundamentally Change Terrorist Threats?, <i>CTC Sentinel</i></li>
+      <li>Hafez &amp; Mullins (2015), The Radicalization Puzzle, <i>Studies in Conflict &amp; Terrorism</i></li>
+      <li>Jasser et al. (2020), Male Supremacism and the Hanau Terrorist Attack, ICCT</li>
+      <li>Jiang &amp; Wilson (2025), Terrorism and the Media, <i>Terrorism and Political Violence</i></li>
+      <li>Kang &amp; Tan (2026), Meta to Pay Up to $17.1 Billion, <i>New York Times</i></li>
+      <li>Kundnani (2012), Radicalisation: The Journey of a Concept, <i>Race &amp; Class</i></li>
+      <li>Kunst et al. (2026), Intelligent Systems, Vulnerable Minds, <i>Personality and Social Psychology Review</i></li>
+      <li>Mehra &amp; Herbach (2026), Prosecuting Minors for Terrorist-Related Conduct in Europe, <i>CTC Sentinel</i></li>
+      <li>Meier (2023), 'Salad Bar Extremism' as White Distraction, GNET</li>
+      <li>Merrill &amp; Oremus (2021), Five Points for Anger, One for a 'Like', <i>Washington Post</i></li>
+      <li>Metzler &amp; Garcia (2024), Social Drivers and Algorithmic Mechanisms, <i>Perspectives on Psychological Science</i></li>
+      <li>Mythen, Naegler &amp; Astley (2026), Written Evidence COM0055, UK Parliament</li>
+      <li>Neumann (2013), Countering Online Radicalization in the United States, <i>Studies in Conflict &amp; Terrorism</i></li>
+      <li>Roose (2022), The Brilliance and Weirdness of ChatGPT, <i>New York Times</i></li>
+      <li>Shaw (2023), Social Media, Extremism, and Radicalization, <i>Science Advances</i></li>
+      <li>Simi &amp; Windisch (2017), Why Radicalization Fails, C-REX</li>
+      <li>Solea (2025), Prompted to Harm, GNET</li>
+      <li>United States v. Gann (2025), Criminal Complaint, S.D.N.Y. Allegations, not findings of fact.</li>
+      <li>Ware (2026), Combating Youth Radicalization, Issue Brief</li>
+      <li>Windisch (2020), Lone Actor Terrorists, Naval Postgraduate School</li>
+    </ul>
+    <p style="margin-top:24px">Built from the research paper <i>Architects or Accelerants? Social Media, Artificial Intelligence, and the Radicalization Process</i>. Interactive models are illustrative teaching tools, not risk assessment instruments.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const NS="http://www.w3.org/2000/svg";
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e}
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+
+/* ---------- hero funnel ---------- */
+(function(){
+  const svg=$("#funnel");
+  el("polygon",{points:"20,28 330,72 640,106 985,114 985,126 640,134 330,168 20,212",fill:"rgba(147,162,174,.08)"},svg);
+  [[330,"Adopt extreme beliefs"],[640,"Act violently"]].forEach(([x,t])=>{
+    el("line",{x1:x,x2:x,y1:20,y2:222,stroke:"#2B3A46","stroke-dasharray":"4 5"},svg);
+    el("text",{x:x+8,y:18,fill:"#93A2AE","font-size":"15","font-family":"Public Sans, sans-serif"},svg,t);
+  });
+  el("text",{x:20,y:18,fill:"#93A2AE","font-size":"15","font-family":"Public Sans, sans-serif"},svg,"Hold a grievance");
+  let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
+  const dots=[];
+  for(let i=0;i<48;i++){
+    const x0=24+rnd()*90, y0=40+rnd()*160;
+    let xf,yf,kind;
+    if(i<39){kind=0;xf=150+rnd()*170;yf=232+rnd()*14}
+    else if(i<47){kind=1;xf=380+rnd()*240;yf=232+rnd()*14}
+    else{kind=2;xf=960;yf=120}
+    const c=el("circle",{cx:x0,cy:y0,r:kind===2?8:5,fill:kind===2?"#E08A00":"#E6ECEF",opacity:.9},svg);
+    dots.push({c,x0,y0,xf,yf,kind,d:rnd()*0.25});
+  }
+  const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+  function frame(p){
+    dots.forEach(o=>{
+      const t=Math.min(1,Math.max(0,(p-o.d)/(1-o.d))), e=ease(t);
+      let x=o.x0+(o.xf-o.x0)*e, y;
+      if(o.kind===2){ y=o.y0+(o.yf-o.y0)*e }
+      else { const drop=Math.max(0,(e-.7)/.3); const mid=120+(o.y0-120)*(1-e*.6); y=mid+(o.yf-mid)*drop }
+      o.c.setAttribute("cx",x.toFixed(1));o.c.setAttribute("cy",y.toFixed(1));
+      if(o.kind<2)o.c.setAttribute("opacity",(0.9-0.62*Math.max(0,(e-.7)/.3)).toFixed(2));
+    });
+  }
+  if(reduce){frame(1);return}
+  const dur=4200;let start=null;
+  function go(ts){if(start===null)start=ts;const p=Math.min(1,(ts-start)/dur);frame(p);if(p<1)requestAnimationFrame(go)}
+  frame(0);setTimeout(()=>requestAnimationFrame(go),500);
+})();
+
+/* ---------- poll ---------- */
+const POLL={arch:"Noted: architect. We'll come back to this in the findings.",acc:"Noted: accelerant. We'll come back to this in the findings."};
+const VERDICT={
+  arch:"You picked <b>architect</b>. The evidence mostly points the other way: technology accelerates a process driven by human vulnerability. But the architecture camp is right that design choices, like weighting anger five times over a like, shape how fast and how far that process runs.",
+  acc:"You picked <b>accelerant</b>. The evidence agrees, with a catch: the accelerant has helped produce a kind of attacker the older models describe poorly, and AI companions may be starting to stand in for the group itself."
+};
+function setPoll(v){
+  $$(".poll button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===v));
+  $("#pollack").textContent=v?POLL[v]:"";
+  if(v)$("#pollres").innerHTML="<p>"+VERDICT[v]+"</p>";
+}
+$$(".poll button").forEach(b=>b.onclick=()=>{store("aa-poll",b.dataset.p);setPoll(b.dataset.p)});
+setPoll(store("aa-poll"));
+
+/* ---------- cases ---------- */
+const CASES=[
+ {id:"pgh",pl:"Pittsburgh",c:"USA",date:"Oct 2018",y:2018.82,
+  what:"Eleven worshippers killed at the Tree of Life Synagogue, the deadliest antisemitic attack in American history.",
+  prof:"Antisemitic; Great Replacement conspiracy theory",
+  tech:"627 posts on Gab in ten months. Attack announced in a final post. Later cited by copycat attackers.",
+  shows:"Social isolation meant almost no one offline could notice. Online, the fixation was plain. No algorithm delivered him to the material: he chose a permissive platform and filled it himself.",
+  tags:["Self-selected platform","72% of TRAP-18 indicators"]},
+ {id:"han",pl:"Hanau",c:"Germany",date:"Feb 2020",y:2020.13,
+  what:"Nine people killed at a shisha bar and a kiosk.",
+  prof:"Racist conspiracy theory fused with male supremacism",
+  tech:"Twenty-four-page manifesto published online; misogynist online milieu.",
+  shows:"The ideology was a product of networked subcultures, not any organization. No recruiter, no group. The record supports reinforcement, not algorithmic recruitment.",
+  tags:["Ideology without organization","Misogyny fused with racism"]},
+ {id:"win",pl:"Windsor Castle",c:"UK",date:"Dec 2021",y:2021.98,
+  what:"Arrested on the castle grounds carrying a crossbow, with a plan to kill the Queen.",
+  prof:"Idiosyncratic, revenge-themed",
+  tech:"A Replika AI companion he named Sarai; more than 5,000 messages, including discussion of the plan.",
+  shows:"The strongest evidence for a new AI effect. There was no human network at all. A machine that agreed with him filled that position. Convicted of treason rather than terrorism.",
+  tags:["AI companion","No human network"]},
+ {id:"sou",pl:"Southport",c:"UK",date:"Jul 2024",y:2024.57,
+  what:"A 17-year-old killed three girls aged six to nine at a children's dance class.",
+  prof:"Mixed, unclear, or unstable; violence-fixated",
+  tech:"Online violent material within a youth digital milieu.",
+  shows:"Violence without ideology. Technology was the medium through which a distressed adolescent found violence available, legible, and validated, not the origin.",
+  tags:["Age 17","No coherent ideology"]},
+ {id:"pir",pl:"Pirkkala",c:"Finland",date:"May 2025",y:2025.38,
+  what:"A 16-year-old stabbed three female classmates after six months of preparation.",
+  prof:"Misogynist, thrill-oriented",
+  tech:"One-page manifesto sent to a newspaper beforehand, reportedly drafted with ChatGPT (plausible but unconfirmed). Attack recorded.",
+  shows:"Generative AI appears at drafting and planning, not at belief formation. Stated motive: to do something significant and exciting. Half the manifesto was about planning.",
+  tags:["AI as instrument","Age 16"]},
+ {id:"nyc",pl:"New York",c:"USA",date:"Jun 2025",y:2025.43,
+  what:"Charged with manufacturing improvised explosive devices from chemicals bought online. Allegedly pointed toward a Jewish school while complaining to a witness.",
+  prof:"Not charged as ideological; antisemitic remark alleged",
+  tech:"Allegedly told investigators he used AI to learn which chemicals to buy and mix.",
+  shows:"AI at the point of capability, not belief. An efficiency gain alongside video instruction and e-commerce. These are allegations in a criminal complaint, not findings of fact.",
+  tags:["Allegations only","AI at capability"]}
+];
+(function(){
+  const nodes=$("#nodes");const lo=2018.3,hi=2025.9;
+  CASES.forEach((c,i)=>{
+    const b=document.createElement("button");
+    b.className="node "+(i%2?"down":"up");b.style.left=((c.y-lo)/(hi-lo)*100)+"%";
+    b.setAttribute("aria-pressed","false");b.dataset.id=c.id;
+    b.innerHTML=`<span class="dot" aria-hidden="true"></span><span class="lab"><span class="pl">${c.pl}</span><span class="yr">${c.c}, ${c.date}</span></span>`;
+    b.onclick=()=>showCase(c.id);nodes.appendChild(b);
+  });
+  showCase("pgh");
+})();
+function showCase(id){
+  const c=CASES.find(x=>x.id===id);
+  $$(".node").forEach(n=>n.setAttribute("aria-pressed",n.dataset.id===id));
+  $("#casebox").innerHTML=`<div class="l"><h3>${c.pl}, ${c.c}</h3><p class="meta">${c.date}</p><p style="margin:0 0 14px">${c.what}</p>${c.tags.map(t=>`<span class="pill">${t}</span>`).join("")}
+  <dl><dt>Ideological profile</dt><dd>${c.prof}</dd><dt>Technology in the record</dt><dd>${c.tech}</dd></dl></div>
+  <div class="r"><h3>What the record shows</h3><p style="margin:0">${c.shows}</p></div>`;
+}
+
+/* ---------- debate ---------- */
+const EVTYPES=["Randomized experiments","Matched survey and browsing data","Systematic and literature reviews","Leaked internal documents","Practitioner and expert testimony","Case reports","Theory and forecasting"];
+const CAMPS=[
+ {k:"arch",name:"Architecture thesis",tag:"Technology drives it",claim:"The machine builds the path.",
+  body:"<p>Recommender systems, generative models, and synthetic social validation combine into an AI architecture of radicalization. Each stage exploits a named psychological weakness: outrage at exposure, need for closure in reinforcement, loneliness and identity uncertainty in group integration.</p><p>The anchor is documentary: Facebook chose outrage as a ranking signal and kept it after its own researchers warned of the harm.</p>",
+  voices:"Kunst et al. (2026); Schroeder et al. (2026); Ganaie (2026); Houser &amp; Dong (2025); Ware (2026); Mythen et al. (2026); Merrill &amp; Oremus (2021)",
+  ev:[2,3,4,5,6],
+  blind:"Sometimes treats capability as behavior. Showing a model can write propaganda is not evidence the propaganda recruits anyone."},
+ {k:"acc",name:"Accelerant position",tag:"Technology enables it",claim:"The machine paves a path people were already walking.",
+  body:"<p>Matched survey and browsing data show extremist video viewers already held resentful attitudes, and mostly arrived through subscriptions and links from fringe sites. Recommendations supplied only a very small share of that traffic.</p><p>Generative AI improves efficiency and scale for terrorists without changing what terrorism is. Documented use has been low-stakes and low-impact.</p>",
+  voices:"Shaw (2023); Metzler &amp; Garcia (2024); Glazzard, McIlhatton &amp; Martin (2026); Klausen (2015); Warner (2010); Hafez &amp; Mullins (2015)",
+  ev:[0,1,2,5],
+  blind:"Generalizes from one platform after it reformed. A 2019-era YouTube finding says little about TikTok, Discord, Telegram, or a chatbot."},
+ {k:"crit",name:"Conceptual critique",tag:"Wrong question?",claim:"Radicalization may be the wrong frame.",
+  body:"<p>The concept was introduced by officials, not academics, and has produced suspect communities, false positives, and a focus on vulnerable individuals that crowds out political causes.</p><p>So-called salad-bar extremism isn't incoherent: many strands share a structural source in white supremacy and male supremacism.</p>",
+  voices:"Kundnani (2012); Schmid; Meier (2023); Jasser et al. (2020); Windisch (2020)",
+  ev:[2,6],
+  blind:"Risks explaining away real attacks. Three girls were stabbed in Pirkkala. The useful version redescribes the problem instead of dissolving it."}
+];
+(function(){
+  const tabs=$("#tabs");
+  CAMPS.forEach((c,i)=>{
+    const b=document.createElement("button");b.className="tab";b.setAttribute("role","tab");b.id="tab-"+c.k;
+    b.innerHTML=`<strong>${c.name}</strong><span>${c.tag}</span>`;b.onclick=()=>showCamp(i);tabs.appendChild(b);
+  });
+  tabs.addEventListener("keydown",e=>{
+    const t=$$(".tab"),i=t.indexOf(document.activeElement);if(i<0)return;
+    if(e.key==="ArrowRight"){showCamp((i+1)%t.length);t[(i+1)%t.length].focus()}
+    if(e.key==="ArrowLeft"){showCamp((i+t.length-1)%t.length);t[(i+t.length-1)%t.length].focus()}
+  });
+  showCamp(0);
+})();
+function showCamp(i){
+  const c=CAMPS[i];
+  $$(".tab").forEach((t,j)=>{t.setAttribute("aria-selected",i===j);t.tabIndex=i===j?0:-1});
+  $("#panel").setAttribute("aria-labelledby","tab-"+c.k);
+  $("#panel").innerHTML=`<div><p class="claim">${c.claim}</p>${c.body}<p class="voices">Key sources: ${c.voices}</p></div>
+  <div><h4>What it mainly stands on</h4><ul class="ev">${EVTYPES.map((t,j)=>`<li class="${c.ev.includes(j)?"on":""}"><i></i>${t}</li>`).join("")}</ul>
+  <h4>Characteristic blind spot</h4><p class="blind">${c.blind}</p></div>`;
+}
+
+/* ---------- number visuals ---------- */
+(function(){
+  // emoji weights
+  const s=el("svg",{viewBox:"0 0 300 70",role:"img","aria-label":"One block for a like, five blocks for an angry reaction"},null);
+  [["Like",1,"var(--muted)"],["Angry",5,"var(--ember-bright)"]].forEach(([l,n,c],r)=>{
+    el("text",{x:0,y:24+r*34,"font-size":"14",fill:"var(--muted)","font-family":"Public Sans, sans-serif"},s,l);
+    for(let i=0;i<n;i++)el("rect",{x:60+i*44,y:8+r*34,width:38,height:22,rx:3,fill:c},s);
+  });
+  $("#v-emoji").appendChild(s);
+  // pictogram
+  const p=$("#v-picto");
+  for(let i=0;i<10;i++){const f=el("svg",{viewBox:"0 0 20 40"},null);const c=i<3?"var(--ember-bright)":"var(--line)";
+    el("circle",{cx:10,cy:7,r:6,fill:c},f);el("rect",{x:3,y:15,width:14,height:24,rx:5,fill:c},f);p.appendChild(f)}
+  // 627 grid
+  const g=el("svg",{viewBox:"0 0 330 95"},null);
+  for(let i=0;i<627;i++){const x=i%57,y=Math.floor(i/57);el("rect",{x:x*5.8,y:y*8.6,width:4.4,height:7,rx:1,fill:i===626?"var(--ember-bright)":"var(--ink)",opacity:i===626?1:.7},g)}
+  $("#v-grid").appendChild(g);
+  // chat
+  const ch=el("svg",{viewBox:"0 0 300 80"},null);
+  for(let i=0;i<14;i++){const left=i%2===0;const w=40+((i*37)%50);
+    el("rect",{x:left?(i%7)*6:300-w-(i%5)*6,y:4+(i%7)*10.5,width:w,height:8,rx:4,fill:left?"var(--line)":"var(--teal)",opacity:.85},ch)}
+  $("#v-chat").appendChild(ch);
+  // donut
+  const d=el("svg",{viewBox:"0 0 120 120",width:"110"},null);const r=46,C=2*Math.PI*r;
+  el("circle",{cx:60,cy:60,r,fill:"none",stroke:"var(--line)","stroke-width":14},d);
+  el("circle",{cx:60,cy:60,r,fill:"none",stroke:"var(--ember-bright)","stroke-width":14,"stroke-dasharray":`${C*.72} ${C}`,transform:"rotate(-90 60 60)"},d);
+  $("#v-donut").appendChild(d);
+  // adoption
+  const a=el("svg",{viewBox:"0 0 300 70"},null);
+  el("line",{x1:10,x2:290,y1:50,y2:50,stroke:"var(--line)","stroke-width":2},a);
+  for(let i=1;i<=5;i++){const x=10+i*50;el("line",{x1:x,x2:x,y1:46,y2:54,stroke:"var(--muted)"},a);el("text",{x:x,y:68,"text-anchor":"middle","font-size":"11",fill:"var(--muted)","font-family":"Public Sans, sans-serif"},a,"Day "+i)}
+  el("circle",{cx:260,cy:18,r:7,fill:"var(--ember-bright)"},a);
+  el("text",{x:248,y:22,"text-anchor":"end","font-size":"13","font-weight":"700",fill:"var(--ink)","font-family":"Public Sans, sans-serif"},a,"1,000,000 users");
+  $("#v-adopt").appendChild(a);
+})();
+
+/* ---------- pathway ---------- */
+const LABELS={rec:"recommendation engine",swarm:"bot swarms",comp:"AI companion",v1:"vulnerability",v2:"high vulnerability"};
+const GAPS=[
+ {label:"Barriers to first contact",bars:[{t:"Extreme content has to be sought out",by:["rec"]},{t:"Little personal interest in it",by:["v1"]},{t:"Fringe content looks fringe",by:["swarm"]}]},
+ {label:"Barriers to beliefs hardening",bars:[{t:"Regular contact with other views",by:["rec"]},{t:"Sense that few people agree",by:["swarm"]},{t:"Offline friends push back",by:["v2"]}]},
+ {label:"Barriers to belonging",bars:[{t:"Belonging requires real people",by:["comp"]},{t:"Recruiters can only reach a few",by:["swarm","comp"]},{t:"Contradictions create doubt",by:["v2"]}]},
+ {label:"Barriers to violence",cap:true,bars:[{t:"Moral qualms about harming people",by:[]},{t:"A trigger or opportunity is needed",by:[]},{t:"Someone challenges the plan",by:["comp"],needHigh:true}]}
+];
+const STAGES=[
+ {n:1,name:"Exposure",sub:"First contact with provocative content",
+  what:"A person meets provocative or polarizing content, often a bridge narrative like general outrage rather than extremist material. Most people stop here.",
+  ai:"Engagement-optimized recommenders surface attention-grabbing content and step up its extremity. Bot swarms can inflate views so fringe content looks popular.",
+  cases:"Not established in any of the six cases. In Pittsburgh and New York, the person chose the platform or the search.",
+  off:"Friction before sharing, a feed not based on profiling, and prebunking that teaches people to spot manipulation."},
+ {n:2,name:"Reinforcement",sub:"Beliefs harden inside a narrower feed",
+  what:"Repetition and personalization enclose the person in a narrower information space. Beliefs harden and corrective information stops landing.",
+  ai:"Filter bubbles and group recommendations connect users with like-minded communities. Synthetic consensus can make an extreme view feel normal.",
+  cases:"Documented in five of six cases, strongest where the online milieu already matched the person's grievance.",
+  off:"Stop recommending extreme groups, time-outs during binging, and independent audits and red-teaming of recommenders."},
+ {n:3,name:"Group integration",sub:"Identity fuses with a network, human or synthetic",
+  what:"The person is absorbed into a network that validates beliefs and supplies identity and belonging. Personal and group identity can fuse.",
+  ai:"AI companions can supply constant, personalized validation, which Kunst et al. call synthetic sociality. An isolated person gets a tight cell's pressure through a machine.",
+  cases:"Where the cases diverge most: a platform community (Pittsburgh), a milieu without a group (Hanau), a companion in place of a group (Windsor), almost nothing (Pirkkala, New York).",
+  off:"Safety filters and developer liability for companion AI, and companions that de-escalate or flag violent ideation for review."},
+ {n:4,name:"Action",sub:"Readiness meets a trigger",
+  what:"Readiness is not action. Violence usually needs a trigger: a perceived attack on the group, a call to action, an opportunity, or a personal crisis.",
+  ai:"Generative AI appears here as an instrument: drafting a manifesto (Pirkkala, reported), validating a plan (Windsor), choosing chemicals (New York, alleged).",
+  cases:"Technology is present at the point of action in all six cases.",
+  off:"Behavioral threat assessment, clear reporting routes for peers, family, and teachers, and model safeguards tested across long conversations."}
+];
+const PS={v:1,a:{rec:false,swarm:false,comp:false},sel:0};
+function bstat(b,g){let rm=false,wk=false;
+  for(const k of b.by){
+    if(k==="v1"&&PS.v>=1)rm=true;else if(k==="v2"&&PS.v>=2)rm=true;
+    else if(PS.a[k]){if(b.needHigh){if(PS.v>=2)wk=true}else if(PS.v>=1)rm=true;else wk=true}
+  }
+  if(g.cap&&rm)return"weak";return rm?"gone":wk?"weak":"solid";
+}
+function bwhy(b,st){if(st==="solid")return"";
+  const who=b.by.filter(k=>(k==="v1"&&PS.v>=1)||(k==="v2"&&PS.v>=2)||PS.a[k]).map(k=>LABELS[k]);
+  return(st==="gone"?"Cleared by ":"Weakened by ")+who.join(" and ")}
+function renderPath(){
+  let h=`<div class="origin">Everyday feed</div>`,solid=0,worst=0,wl=-1;
+  GAPS.forEach((g,i)=>{let loss=0,cells="";
+    g.bars.forEach(b=>{const st=bstat(b,g);if(st==="solid")solid++;else loss+=st==="weak"?.5:1;
+      const w=bwhy(b,st);cells+=`<div class="bar ${st==="solid"?"":st}"><span class="t">${b.t}</span>${w?`<span class="why">${w}</span>`:""}</div>`});
+    if(loss>wl&&i<3){wl=loss;worst=i}
+    h+=`<div class="gap ${loss>=1.5?"hot":""}"><p class="gap-label">${g.label}</p><div class="bars">${cells}</div></div>`;
+    const s=STAGES[i];h+=`<button class="stage" data-s="${i}" aria-pressed="${PS.sel===i}"><span class="n">${s.n}</span><span class="nm">${s.name}</span><span class="sub">${s.sub}</span></button>`;
+  });
+  h+=`<div class="legend"><span><i class="l1"></i>Holding</span><span><i class="l2"></i>Weakened</span><span><i class="l3"></i>Cleared</span></div>`;
+  $("#path").innerHTML=h;
+  $$("#path .stage").forEach(b=>b.onclick=()=>{PS.sel=+b.dataset.s;renderPath()});
+  $("#count").innerHTML=`${solid} of 12<small>firebreaks holding</small>`;
+  const anyA=Object.values(PS.a).some(Boolean),names=["first contact","beliefs hardening","belonging"];let s;
+  if(!anyA&&PS.v===0)s="Low vulnerability, no accelerants: the ordinary friction of offline life stays in place. This describes most people who ever see extremist content.";
+  else if(!anyA)s="Vulnerability alone wears some barriers down, but the path is still slow and effortful. Closer to how radicalization worked before engagement-optimized platforms.";
+  else if(PS.v===0)s="The accelerants weaken barriers but clear none. Without a vulnerability to fit, the system cycles through content instead of capturing the person. The fuel is human.";
+  else s=`The biggest loss is in the barriers to ${names[worst]}. The barriers to violence still largely hold, which is why the move to action is where warning behaviors surface and where intervention has the most to work with.`;
+  $("#summary").textContent=s;
+  const st=STAGES[PS.sel];
+  $("#detail").innerHTML=`<h3>${st.n}. ${st.name}</h3><h4>What happens</h4><p>${st.what}</p><h4>Where AI speeds it up</h4><p>${st.ai}</p><h4>In the six cases</h4><p>${st.cases}</p><h4>Off-ramps</h4><p>${st.off}</p>`;
+  $$("#vuln button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.v===PS.v));
+  $$("#pathway .tog").forEach(b=>b.setAttribute("aria-pressed",PS.a[b.dataset.a]));
+}
+$$("#vuln button").forEach(b=>b.onclick=()=>{PS.v=+b.dataset.v;renderPath()});
+$$("#pathway .tog").forEach(b=>b.onclick=()=>{PS.a[b.dataset.a]=!PS.a[b.dataset.a];renderPath()});
+renderPath();
+
+/* ---------- scorecard ---------- */
+const COLS=[["Stage 1","Algorithmic recruitment"],["Stage 2","Reinforcement"],["Stage 3","Belonging and validation"],["Action","Technology at the point of action"]];
+const LV={0:"Not established",1:"Partial",2:"Documented",A:"AI in the record"};
+const ROWS=[
+ ["Pittsburgh, 2018",[[0,"Not established. He selected a permissive platform and populated it himself."],[2,"627 Gab posts in ten months."],[2,"Low-moderation platform community. TRAP-18 scores dependence on a virtual community as present."],[2,"Attack announced in a final post. He then became a template for later attackers."]]],
+ ["Hanau, 2020",[[0,"Not established. No evidence recommendation systems delivered him to the milieu."],[2,"Documented immersion in racist and misogynist online content."],[1,"An ideological milieu with no organization, recruiter, or friendship group."],[2,"Twenty-four-page manifesto published online."]]],
+ ["Windsor Castle, 2021",[[0,"Not established."],[1,"Partial."],["A","An AI companion occupied the place of a group: more than 5,000 messages."],["A","The plan was discussed with the companion, which validated rather than challenged it."]]],
+ ["Southport, 2024",[[0,"Not established."],[2,"Documented exposure to online violent material."],[1,"Diffuse, violence-fixated peer environments without ideology."],[2,"Attack material online."]]],
+ ["Pirkkala, 2025",[[0,"Not established."],[2,"Documented."],[1,"Minimal. Ideology thinly held."],["A","Manifesto reportedly drafted with ChatGPT (plausible, unconfirmed). Attack recorded."]]],
+ ["New York, 2025",[[0,"Not established."],[0,"Not established on the record."],[0,"None documented."],["A","Allegedly used AI to learn which chemicals to buy and mix; precursors bought online. Allegations, not findings."]]]
+];
+(function(){
+  const t=$("#score");
+  t.innerHTML=`<thead><tr><th></th>${COLS.map(c=>`<th scope="col">${c[0]}<small>${c[1]}</small></th>`).join("")}</tr></thead><tbody>${
+    ROWS.map((r,i)=>`<tr><th scope="row" class="rowh">${r[0]}</th>${r[1].map((c,j)=>`<td class="lv${c[0]}"><button data-r="${i}" data-c="${j}" aria-pressed="false">${LV[c[0]]}</button></td>`).join("")}</tr>`).join("")}</tbody>`;
+  $$("#score button").forEach(b=>b.onclick=()=>{
+    $$("#score button").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");
+    const r=ROWS[b.dataset.r],c=r[1][b.dataset.c];
+    $("#scorenote").innerHTML=`<strong>${r[0]}: ${COLS[b.dataset.c][1]}</strong>${c[1]}`;
+  });
+})();
+
+/* ---------- ages ---------- */
+(function(){
+  const s=$("#ages"),X=a=>60+(a-8)*75,ax=140,F="Public Sans, sans-serif";
+  el("rect",{x:X(12),y:ax+8,width:X(20)-X(12),height:10,rx:2,fill:"var(--ember-soft)"},s);
+  el("text",{x:X(16),y:ax+38,"text-anchor":"middle","font-size":"13",fill:"var(--muted)","font-family":F},s,"Ages 12 to 20: about 30% of EU terrorism arrests in 2024");
+  el("line",{x1:X(8),x2:X(20),y1:ax,y2:ax,stroke:"var(--ink)","stroke-width":2},s);
+  for(let a=8;a<=20;a++){el("line",{x1:X(a),x2:X(a),y1:ax-4,y2:ax+4,stroke:"var(--ink)"},s)}
+  [[10,"UK"],[12,"Netherlands"],[14,"Germany"]].forEach(([a,c])=>{
+    el("line",{x1:X(a),x2:X(a),y1:ax+52,y2:ax+72,stroke:"var(--teal)","stroke-width":4},s);
+    el("text",{x:X(a),y:ax+92,"text-anchor":"middle","font-size":"13","font-weight":"600",fill:"var(--teal)","font-family":F},s,c+" "+a);
+  });
+  el("text",{x:X(8),y:ax+92,"font-size":"12",fill:"var(--muted)","font-family":F,"text-anchor":"start"},s,"");
+  const M=[[8,"Children as young as 8","targeted via gaming",96],[12,"Wisconsin","nihilist Telegram channel",56],[14,"Sydney","earlier plot investigated",96],[15,"Zurich","antisemitic attack",56],[16,"Pirkkala","school stabbing",96],[17,"Southport","dance class",56]];
+  M.forEach(([a,t,d,h])=>{
+    el("line",{x1:X(a),x2:X(a),y1:ax,y2:ax-h+26,stroke:"var(--ember-bright)","stroke-width":2},s);
+    el("circle",{cx:X(a),cy:ax,r:6,fill:"var(--ember-bright)"},s);
+    el("text",{x:X(a),y:ax-h+4,"text-anchor":a===8?"start":"middle","font-size":"14","font-weight":"700",fill:"var(--ink)","font-family":F},s,t);
+    el("text",{x:X(a),y:ax-h+20,"text-anchor":a===8?"start":"middle","font-size":"12",fill:"var(--muted)","font-family":F},s,a+" · "+d);
+  });
+  el("text",{x:X(20),y:ax+22,"text-anchor":"end","font-size":"12",fill:"var(--muted)","font-family":F},s,"");
+  el("text",{x:X(8)-8,y:ax+120,"font-size":"12",fill:"var(--muted)","font-family":F},s,"Teal marks: age of criminal responsibility");
+})();
+(function(){
+  const P=[["Grievance",.75,"Present, but personal rather than political."],["Networks",.2,"Diffuse or absent. No organization, no recruiter."],["Enabling environment",1,"Pervasive. Violence is one tap away."],["Ideology",.08,"Thin to the point of near-absence."]];
+  $("#pieces").innerHTML=P.map(([n,v,t])=>`<div class="card piece"><h4>${n}</h4><div class="meter" role="img" aria-label="${n}: ${Math.round(v*100)} percent"><i style="width:${v*100}%"></i></div><p>${t}</p></div>`).join("");
+})();
+
+/* ---------- companion compare ---------- */
+(function(){
+  const C=["Extremist group","Online milieu","AI companion"];
+  const R=[["What pulls people in"],["Validation",[2,2,2]],["Belonging",[2,1,2]],["Always available",[1,2,2]],["What holds people back"],["Sorting away from mass violence",[2,0,0]],["Room for disillusionment",[2,0,0]],["Someone who might notice",[2,1,0]]];
+  const SYM={2:["●","Yes"],1:["◐","Partly"],0:["○","No"]};
+  let hl=2;
+  function draw(){
+    let h=`<div class="h">Function</div>${C.map((c,i)=>`<div class="h c ${i===hl?"hl":""}"><button data-i="${i}" aria-pressed="${i===hl}">${c}</button></div>`).join("")}`;
+    R.forEach(r=>{if(!r[1]){h+=`<div class="grp">${r[0]}</div>`;return}
+      h+=`<div>${r[0]}</div>${r[1].map((v,i)=>`<div class="c ${i===hl?"hl":""}"><b aria-hidden="true">${SYM[v][0]}</b>${SYM[v][1]}</div>`).join("")}`});
+    $("#cmp").innerHTML=h;$$("#cmp button").forEach(b=>b.onclick=()=>{hl=+b.dataset.i;draw()});
+  }
+  draw();
+})();
+
+/* ---------- copycat loop ---------- */
+(function(){
+  const s=$("#loop"),cx=260,cy=260,r=170,F="Public Sans, sans-serif";
+  el("circle",{cx,cy,r,fill:"none",stroke:"#2B3A46","stroke-width":3},s);
+  const pts=[[-90,"Attack"],[0,"Manifesto and recording"],[90,"Circulates online"],[180,"Studied by the next attacker"]];
+  const pos=a=>[cx+r*Math.cos(a*Math.PI/180),cy+r*Math.sin(a*Math.PI/180)];
+  pts.forEach(([a],i)=>{const m=a+45,[x,y]=pos(m),t=m+90;
+    el("path",{d:"M-7,-6 L5,0 L-7,6",fill:"none",stroke:"#93A2AE","stroke-width":2.5,transform:`translate(${x},${y}) rotate(${t})`},s)});
+  const path=el("path",{id:"lp",d:`M ${cx} ${cy-r} A ${r} ${r} 0 1 1 ${cx-0.01} ${cy-r}`,fill:"none"},s);
+  const brk=el("g",{opacity:0},s);
+  const BA=58,[bx,by]=pos(BA),tg=(BA+90)*Math.PI/180;
+  [-13,0,13].forEach(o=>el("rect",{x:-4,y:-24,width:8,height:48,rx:2,fill:"#45A59E",transform:`translate(${bx+o*Math.cos(tg)},${by+o*Math.sin(tg)}) rotate(${BA-90})`},brk));
+  pts.forEach(([a,l],i)=>{const [x,y]=pos(a);
+    el("circle",{cx:x,cy:y,r:14,fill:i===0?"#E08A00":"#101A22",stroke:"#E08A00","stroke-width":3},s);
+    const lx=a===0?x-24:a===180?x+24:x, ly=a===-90?y-28:a===90?y+40:y+5, anc=a===0?"end":a===180?"start":"middle";
+    const words=l.split(" "),lines=[];let cur="";words.forEach(w=>{if((cur+" "+w).trim().length>14){lines.push(cur.trim());cur=w}else cur+=" "+w});lines.push(cur.trim());
+    lines.forEach((ln,k)=>el("text",{x:lx,y:ly+k*19-(a===0||a===180?(lines.length-1)*9:0),"text-anchor":anc,"font-size":"16","font-weight":"700",fill:"#E6ECEF","font-family":F},s,ln));
+  });
+  const dot=el("circle",{r:8,fill:"#F0A93A"},s);
+  let am=null;
+  if(!reduce){am=el("animateMotion",{dur:"6s",repeatCount:"indefinite",rotate:"0"},dot);el("mpath",{href:"#lp"},am)}
+  else{dot.setAttribute("cx",cx);dot.setAttribute("cy",cy-r)}
+  $("#brk").onclick=function(){
+    const on=this.getAttribute("aria-pressed")!=="true";this.setAttribute("aria-pressed",on);
+    this.textContent=on?"Hide the interventions":"Show how to break the loop";
+    $("#fixes").classList.toggle("show",on);brk.setAttribute("opacity",on?1:0);
+    if(on){if(am)am.remove();am=null;const [x,y]=pos(40);dot.setAttribute("cx",x);dot.setAttribute("cy",y)}
+    else if(!reduce){dot.removeAttribute("cx");dot.removeAttribute("cy");am=el("animateMotion",{dur:"6s",repeatCount:"indefinite"},dot);el("mpath",{href:"#lp"},am);try{s.setCurrentTime(0)}catch(e){}}
+  };
+})();
+
+/* ---------- warning behaviors ---------- */
+(function(){
+  const W=[["Pathway","Research, planning, preparation, or carrying out steps toward an attack.",1],["Fixation","A growing, all-consuming preoccupation with a person or cause.",0],["Identification","Seeing oneself as a warrior or soldier for the cause, or identifying with past attackers.",1],["Novel aggression","An act of violence unrelated to the target, as if testing capacity.",0],["Energy burst","A rise in the frequency or variety of target-related activity in the days or weeks before.",1],["Leakage","Telling a third party of the intent to attack, in words, posts, or writing.",0],["Last resort","A sense that violence is the only option left, with rising desperation.",1],["Directly communicated threat","A threat communicated to the target or to law enforcement.",0]];
+  $("#wgrid").innerHTML=W.map(w=>`<div class="card w" data-p="${w[2]}"><h4>${w[0]}</h4><p>${w[1]}</p></div>`).join("");
+  $("#pgh").onclick=function(){const on=this.getAttribute("aria-pressed")!=="true";this.setAttribute("aria-pressed",on);
+    $$("#wgrid .w").forEach(x=>x.classList.toggle("lit",on&&x.dataset.p==="1"))};
+})();
+
+/* ---------- recommendations ---------- */
+(function(){
+  const R=[
+   ["Regulate design, not speech.","Content removal is the least desirable and least effective option (Neumann 2013). Target engagement optimization, nighttime and school-hours notifications, and recommending extreme groups. The Meta settlement of up to $17.1 billion restricts features rather than expression.","Restricting youth access may push young people onto less moderated, encrypted platforms."],
+   ["Extend AI safety testing from capability to relationship.","Current safety work asks whether models hand out dangerous knowledge. The Windsor case points to a different risk: sustained companionship and sycophancy. Test whether models affirm escalating violent ideation across long conversations.","Monitoring intimate exchanges raises surveillance concerns and will generate false positives at scale."],
+   ["Rebuild the barriers technology removes, and interrupt the copycat script.","Deliberately reintroduce friction: digital and emotional literacy, support that reduces the need for hostile validation, and suppression of attacker names, manifestos, and tactical lessons. Judge programs on off-ramps created, not takedown volume.","Prevention aimed at online vulnerability can stigmatize whole communities, as earlier counter-radicalization programs did."],
+   ["Treat juvenile cases as child protection first.","Most juvenile extremist offenders are convicted of possession and dissemination, not violence, and safeguards are applied unevenly (Mehra &amp; Herbach 2026). Prosecution of minors for informational offenses should be a last resort.","Diversion is not dismissal. Genuine threats still need assessment and management."],
+   ["Fund the four studies the field is missing.","Longitudinal tracking of behavior and attitudes together; tests of whether AI companionship increases identity fusion; head-to-head persuasion tests of AI versus human extremist content; and whether technology weakens the barriers to violence. Guaranteed researcher data access comes first.","Mandated data access carries real privacy costs, and the same infrastructure enables other uses."]
+  ];
+  $("#recslist").innerHTML=R.map((r,i)=>`<details class="card"${i===0?" open":""}><summary><span class="k">${i+1}</span><b>${r[0]}</b><span class="plus" aria-hidden="true">+</span></summary><div class="body"><p>${r[1]}</p><p class="risk"><b>Trade-off to watch</b>${r[2]}</p></div></details>`).join("");
+})();
+
+/* ---------- quiz ---------- */
+(function(){
+  const Q=[
+   ["In how many of the six cases does the record show a previously uncommitted person delivered to extremism by a recommendation engine?",["None","Two","Four","All six"],0,"None. Stage 1 is the empty column. People arrived already primed, and in Pittsburgh and New York they picked the platform or search themselves."],
+   ["What share of people arrested on terrorism suspicion in the EU in 2024 were aged 12 to 20?",["About 5%","About 15%","About 30%","About 60%"],2,"Nearly 30%, and most juvenile offenders were convicted of preparatory or material offenses rather than violence."],
+   ["Which function can an AI companion NOT provide that a human group can?",["Validation","Constant availability","Sorting people away from mass violence","A sense of belonging"],2,"Companions validate and are always there, but have no organizational interest in restraining anyone and are optimized for agreement, so they can't sort or disappoint."],
+   ["Where does AI appear in the New York case?",["It supplied the ideology","It chose the target","It helped with capability: which chemicals to buy and mix","It recruited him into a group"],2,"At the point of capability, allegedly. An efficiency gain alongside video instruction and online shopping, not a source of belief."]
+  ];
+  let i=0,score=0;const box=$("#quizbox");
+  function show(){
+    if(i>=Q.length){box.innerHTML=`<p class="qtext">You got ${score} of ${Q.length}.</p><p style="margin:0">${score===Q.length?"Every one. You've got the core of the argument.":"Scroll back to the scorecard and the companion comparison for the ones you missed."}</p><button class="qnext" id="qr">Try again</button>`;$("#qr").onclick=()=>{i=0;score=0;show()};return}
+    const q=Q[i];
+    box.innerHTML=`<div class="qprog">Question ${i+1} of ${Q.length}</div><p class="qtext">${q[0]}</p><div class="qopts">${q[1].map((o,j)=>`<button data-j="${j}">${o}</button>`).join("")}</div><p class="qfb" id="qfb"></p>`;
+    $$(".qopts button").forEach(b=>b.onclick=()=>{
+      const j=+b.dataset.j;if(j===q[2])score++;
+      $$(".qopts button").forEach(x=>{x.disabled=true;if(+x.dataset.j===q[2])x.classList.add("right")});
+      if(j!==q[2])b.classList.add("wrong");
+      $("#qfb").innerHTML=`<b>${j===q[2]?"Right.":"Not quite."}</b> ${q[3]}`;
+      const n=document.createElement("button");n.className="qnext";n.textContent=i<Q.length-1?"Next question":"See your score";n.onclick=()=>{i++;show()};box.appendChild(n);n.focus();
+    });
+  }
+  show();
+})();
+
+/* ---------- nav ---------- */
+(function(){
+  const links=$$(".nav a.l"),map={};links.forEach(a=>map[a.getAttribute("href").slice(1)]=a);
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove("on"));const a=map[e.target.id];if(a){a.classList.add("on");const ul=a.closest("ul");ul.scrollLeft=a.offsetLeft-ul.clientWidth/2+a.clientWidth/2}}}),{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)io.observe(s)});
+  const pr=$("#progress");addEventListener("scroll",()=>{const h=document.documentElement;pr.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+"%"},{passive:true});
+})();
+})();
+</script>
+</body>
+</html>

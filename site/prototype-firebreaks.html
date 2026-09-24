@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Firebreaks: how AI accelerates radicalization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF1F3; --panel:#FFFFFF; --ink:#16212C; --muted:#56626E; --line:#C6D0D6;
+  --break:#1E6B67; --break-ink:#FFFFFF; --heat:#D98A0B; --heat-soft:#F6E3C2;
+  --focus:#2C5BD6;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#11181E; --panel:#19232B; --ink:#E4EAEE; --muted:#9AA7B2; --line:#2F3C47;
+    --break:#3FA39C; --break-ink:#08201F; --heat:#F0A93A; --heat-soft:#3A2C14; --focus:#7FA4FF;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#11181E; --panel:#19232B; --ink:#E4EAEE; --muted:#9AA7B2; --line:#2F3C47;
+  --break:#3FA39C; --break-ink:#08201F; --heat:#F0A93A; --heat-soft:#3A2C14; --focus:#7FA4FF;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:48px 24px 64px}
+header{max-width:44rem;margin-bottom:36px}
+h1{font-size:clamp(2.1rem,5vw,3.5rem);line-height:1.04;font-weight:800;letter-spacing:-0.025em;margin:0 0 20px}
+.lede{font-size:1.14rem;color:var(--muted);margin:0}
+.lede strong{color:var(--ink);font-weight:600}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:28px 40px;padding:22px 24px;background:var(--panel);
+  border:1px solid var(--line);border-radius:6px;margin-bottom:32px}
+.control h2{font-size:.95rem;font-weight:600;margin:0 0 10px}
+.control p{font-size:.85rem;color:var(--muted);margin:8px 0 0;max-width:24rem}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.seg button{font:inherit;font-size:.92rem;background:transparent;color:var(--ink);border:0;
+  padding:8px 16px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.toggles{display:flex;flex-wrap:wrap;gap:10px}
+.tog{font:inherit;font-size:.92rem;display:inline-flex;align-items:center;gap:10px;cursor:pointer;
+  background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:8px 14px}
+.tog .sw{width:28px;height:16px;border-radius:8px;background:var(--line);position:relative;transition:background .2s}
+.tog .sw::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;
+  background:var(--panel);transition:transform .2s}
+.tog[aria-pressed="true"]{border-color:var(--heat);background:var(--heat-soft)}
+.tog[aria-pressed="true"] .sw{background:var(--heat)}
+.tog[aria-pressed="true"] .sw::after{transform:translateX(12px)}
+button:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* layout */
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:880px){.grid{grid-template-columns:1fr}}
+
+/* pathway */
+.path{position:relative}
+.origin{font-size:.9rem;color:var(--muted);padding:0 0 12px 18px;border-left:3px solid var(--line)}
+.stage{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);cursor:pointer;
+  background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--ink);
+  border-radius:4px;padding:14px 18px}
+.stage:hover{border-color:var(--ink)}
+.stage[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.stage .n{font-weight:800;font-size:.85rem;color:var(--muted);margin-right:10px;font-variant-numeric:tabular-nums}
+.stage .name{font-weight:700;font-size:1.15rem}
+.stage .sub{display:block;font-size:.9rem;color:var(--muted);margin-top:2px}
+.gap{padding:12px 0 12px 18px;border-left:3px solid var(--line);margin-left:0;transition:border-color .3s}
+.gap.hot{border-left-color:var(--heat)}
+.gap-label{font-size:.8rem;color:var(--muted);margin:0 0 8px}
+.bars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+@media (max-width:520px){.bars{grid-template-columns:1fr}}
+.bar{font-size:.8rem;line-height:1.3;padding:9px 10px;border-radius:3px;min-height:58px;
+  background:var(--break);color:var(--break-ink);border:2px solid var(--break);
+  transition:background .3s,color .3s,border-color .3s,opacity .3s}
+.bar .why{display:block;font-size:.72rem;margin-top:4px;opacity:.85}
+.bar.weak{background:transparent;color:var(--ink);border-style:dashed}
+.bar.gone{background:transparent;color:var(--muted);border:2px dashed var(--heat);opacity:.8}
+.bar.gone .t{text-decoration:line-through;text-decoration-color:var(--heat)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:.8rem;color:var(--muted);margin:16px 0 0}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:18px;height:12px;border-radius:2px}
+.legend .l1{background:var(--break)}
+.legend .l2{border:2px dashed var(--break)}
+.legend .l3{border:2px dashed var(--heat)}
+
+/* side */
+.side{position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}
+@media (max-width:880px){.side{position:static}}
+.readout{background:var(--ink);color:var(--paper);border-radius:6px;padding:20px 22px;margin-bottom:20px}
+.readout .count{font-size:2rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.readout .count small{font-size:.9rem;font-weight:500;opacity:.75;margin-left:6px}
+.readout p{margin:10px 0 0;font-size:.95rem}
+.detail{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:22px 24px}
+.detail h3{font-size:1.4rem;margin:0 0 4px;letter-spacing:-0.01em}
+.detail .tag{display:inline-block;font-size:.78rem;font-weight:600;padding:3px 8px;border-radius:3px;
+  background:var(--heat-soft);color:var(--ink);margin:6px 0 14px}
+.detail h4{font-size:.95rem;margin:18px 0 4px}
+.detail p{margin:0;font-size:.95rem;max-width:62ch}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted);max-width:60rem}
+footer p{margin:0 0 8px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The fuel is human. AI clears the firebreaks.</h1>
+    <p class="lede">Grievances, identity needs, and loneliness drive radicalization. Kunst et al. (2026) argue that AI works as a catalyst, removing the ordinary friction that stops most people partway. <strong>Set the conditions below and watch which barriers weaken at each stage.</strong> Select any stage for what it looks like and where you can intervene.</p>
+  </header>
+
+  <section class="controls" aria-label="Scenario settings">
+    <div class="control">
+      <h2 id="vlab">Predisposing vulnerability</h2>
+      <div class="seg" role="group" aria-labelledby="vlab" id="vuln">
+        <button data-v="0" aria-pressed="false">Low</button>
+        <button data-v="1" aria-pressed="true">Moderate</button>
+        <button data-v="2" aria-pressed="false">High</button>
+      </div>
+      <p>Isolation, identity uncertainty, need for certainty, grievance.</p>
+    </div>
+    <div class="control">
+      <h2 id="alab">AI accelerants</h2>
+      <div class="toggles" role="group" aria-labelledby="alab">
+        <button class="tog" data-a="rec" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Recommendation engine</button>
+        <button class="tog" data-a="swarm" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Bot swarms</button>
+        <button class="tog" data-a="comp" aria-pressed="false"><span class="sw" aria-hidden="true"></span>AI companion</button>
+      </div>
+      <p>Each one targets a different kind of friction.</p>
+    </div>
+  </section>
+
+  <div class="grid">
+    <div class="path" id="path" aria-label="Radicalization pathway"></div>
+    <aside class="side">
+      <div class="readout" aria-live="polite">
+        <div class="count" id="count"></div>
+        <p id="summary"></p>
+      </div>
+      <div class="detail" id="detail" aria-live="polite"></div>
+    </aside>
+  </div>
+
+  <footer>
+    <p>Illustrative model for training, not a risk assessment tool. The pathway is not a fixed sequence: people stall, cycle, skip stages, and exit. The barriers shown are simplified from the sources below.</p>
+    <p>Sources: Kunst et al. (2026), Intelligent Systems, Vulnerable Minds, Personality and Social Psychology Review; Simi &amp; Windisch (2017) on barriers to violence; Meloy's TRAP-18 warning behaviors as applied in Amman et al. (2026); Solea (2025), GNET, on the Pirkkala attack.</p>
+  </footer>
+</div>
+
+<script>
+const LABELS={rec:"recommendation engine",swarm:"bot swarms",comp:"AI companion",v1:"vulnerability",v2:"high vulnerability"};
+
+const GAPS=[
+ {id:"A",label:"Barriers to first contact",bars:[
+   {t:"Extreme content has to be sought out",by:["rec"]},
+   {t:"Little personal interest in it",by:["v1"]},
+   {t:"Fringe content looks fringe",by:["swarm"]}]},
+ {id:"B",label:"Barriers to beliefs hardening",bars:[
+   {t:"Regular contact with other views",by:["rec"]},
+   {t:"Sense that few people agree",by:["swarm"]},
+   {t:"Offline friends push back",by:["v2"]}]},
+ {id:"C",label:"Barriers to belonging",bars:[
+   {t:"Belonging requires real people",by:["comp"]},
+   {t:"Recruiters can only reach a few",by:["swarm","comp"]},
+   {t:"Contradictions create doubt",by:["v2"]}]},
+ {id:"D",label:"Barriers to violence",cap:true,bars:[
+   {t:"Moral qualms about harming people",by:[]},
+   {t:"A trigger or opportunity is needed",by:[]},
+   {t:"Someone challenges the plan",by:["comp"],needHigh:true}]}
+];
+
+const STAGES=[
+ {n:1,name:"Exposure",sub:"First contact with provocative content",
+  tag:"Evidence: contested",
+  what:"A person meets provocative or polarizing content, often a bridge narrative like general outrage rather than extremist material. Most people stop here.",
+  ai:"Engagement-optimized recommenders surface attention-grabbing content and step up its extremity over repeated sessions. Bot swarms can inflate views and shares so fringe content looks popular.",
+  notice:"Usually nothing visible. Early signs may include new interest in grievance content, sharing outrage posts, or unfamiliar vocabulary picked up online.",
+  off:"Friction before sharing, a feed option not based on profiling, and prebunking that teaches people to spot manipulation techniques.",
+  ev:"Funneling by recommenders has support, but the rabbit-hole claim has mixed evidence and platforms also down-rank extreme content. Kunst et al. conclude algorithms mostly help those already vulnerable rather than pulling in passive users."},
+ {n:2,name:"Reinforcement",sub:"Beliefs harden inside a narrower feed",
+  tag:"Evidence: mixed",
+  what:"Repetition and personalization enclose the person in a narrower information space. Beliefs harden and corrective information stops landing.",
+  ai:"Filter bubbles and group recommendations connect users with like-minded communities. Synthetic consensus from bot swarms can make an extreme view feel normal and widely held.",
+  notice:"Rigid, black-and-white talk, dismissing mainstream sources, long binges on one type of content, and pulling away from friends who disagree.",
+  off:"Limits on recommending extreme groups, engagement time-outs during binging, and independent audits and red-team testing of recommender systems.",
+  ev:"Effects appear strongest for people high in need for certainty or threat sensitivity. Many people stall here indefinitely, consuming content as entertainment without moving further."},
+ {n:3,name:"Group integration",sub:"Identity fuses with a network, human or synthetic",
+  tag:"Evidence: emerging",
+  what:"The person is absorbed into a network that validates their beliefs and supplies identity and belonging. Personal and group identity can fuse.",
+  ai:"AI companions can supply constant, personalized validation, which Kunst et al. call synthetic sociality. An isolated lone actor can get the social pressure of a tight cell through a non-human interface.",
+  notice:"Us-versus-them language, a new online identity, fixation on a cause or grievance, identifying with past attackers, and growing isolation from family.",
+  off:"Detection of swarm propaganda and deepfakes, developer liability and safety filters for companion AI, and companions that de-escalate or flag violent ideation for review.",
+  ev:"Bot swarms are a plausible prognosis rather than a documented phenomenon. A companion chatbot encouraging violence has at least one documented case, the 'Sarai' case cited by Kunst et al."},
+ {n:4,name:"Action",sub:"Readiness meets a trigger",
+  tag:"Evidence: theorized offline",
+  what:"Readiness is not action. Moving to violence usually needs a trigger: a perceived attack on the group, a call to action, an opportunity, or a personal crisis. Moral barriers stop many people here.",
+  ai:"Less than at earlier stages, since refusal mechanisms add friction. The Pirkkala attacker reportedly used ChatGPT during six months of preparation, though its exact role is unconfirmed.",
+  notice:"Warning behaviors cluster here: leakage of intent to others, researching targets or weapons, a burst of preparatory activity, last-resort thinking. The Pirkkala attacker sent his manifesto to a newspaper before the attack.",
+  off:"Behavioral threat assessment, clear reporting routes for peers, family, and teachers, and AI refusals and safety filters.",
+  ev:"Triggers are well supported in offline research but not yet confirmed specifically for online radicalization."}
+];
+
+const state={v:1,a:{rec:false,swarm:false,comp:false},sel:0};
+
+function status(bar,gap){
+  let removed=false, weakened=false;
+  for(const k of bar.by){
+    if(k==="v1" && state.v>=1) removed=true;
+    else if(k==="v2" && state.v>=2) removed=true;
+    else if(state.a[k]){
+      if(bar.needHigh){ if(state.v>=2) weakened=true; }
+      else if(state.v>=1) removed=true; else weakened=true;
+    }
+  }
+  if(gap.cap && removed) return "weak";
+  return removed?"gone":weakened?"weak":"solid";
+}
+function why(bar,st){
+  if(st==="solid") return "";
+  const who=bar.by.filter(k=>(k==="v1"&&state.v>=1)||(k==="v2"&&state.v>=2)||state.a[k]).map(k=>LABELS[k]);
+  return (st==="gone"?"Cleared by ":"Weakened by ")+who.join(" and ");
+}
+
+function render(){
+  const p=document.getElementById("path");
+  let html=`<div class="origin">Everyday feed</div>`;
+  let solid=0,weak=0,gone=0,worst=null,worstLoss=-1;
+  GAPS.forEach((g,i)=>{
+    let loss=0, cells="";
+    g.bars.forEach(b=>{
+      const st=status(b,g);
+      if(st==="solid")solid++; else if(st==="weak"){weak++;loss+=0.5} else {gone++;loss+=1}
+      const w=why(b,st);
+      cells+=`<div class="bar ${st==="solid"?"":st}"><span class="t">${b.t}</span>${w?`<span class="why">${w}</span>`:""}</div>`;
+    });
+    if(loss>worstLoss && i<3){worstLoss=loss;worst=i}
+    html+=`<div class="gap ${loss>=1.5?"hot":""}"><p class="gap-label">${g.label}</p><div class="bars">${cells}</div></div>`;
+    const s=STAGES[i];
+    html+=`<button class="stage" data-s="${i}" aria-pressed="${state.sel===i}"><span class="n">${s.n}</span><span class="name">${s.name}</span><span class="sub">${s.sub}</span></button>`;
+  });
+  html+=`<div class="legend"><span><i class="l1"></i>Holding</span><span><i class="l2"></i>Weakened</span><span><i class="l3"></i>Cleared</span></div>`;
+  p.innerHTML=html;
+  p.querySelectorAll(".stage").forEach(b=>b.onclick=()=>{state.sel=+b.dataset.s;render()});
+
+  document.getElementById("count").innerHTML=`${solid} of 12<small>firebreaks holding</small>`;
+  const anyA=Object.values(state.a).some(Boolean);
+  const names=["first contact","beliefs hardening","belonging"];
+  let s;
+  if(!anyA && state.v===0) s="With low vulnerability and no accelerants, the ordinary friction of offline life stays in place. This describes most people who encounter extremist content.";
+  else if(!anyA) s="Vulnerability alone wears some barriers down, but the path is still slow and effortful. This is closer to how radicalization worked before engagement-optimized platforms.";
+  else if(state.v===0) s="The accelerants weaken barriers but clear none of them. Without a vulnerability to fit, the system keeps cycling through content rather than capturing the person. The fuel is human.";
+  else s=`The biggest loss is in the barriers to ${names[worst]}. The barriers to violence still largely hold, which is why the move to action is where warning behaviors tend to surface and where intervention has the most to work with.`;
+  document.getElementById("summary").textContent=s;
+
+  const st=STAGES[state.sel];
+  document.getElementById("detail").innerHTML=`
+    <h3>${st.n}. ${st.name}</h3><span class="tag">${st.tag}</span>
+    <h4>What happens</h4><p>${st.what}</p>
+    <h4>Where AI speeds it up</h4><p>${st.ai}</p>
+    <h4>What you might notice</h4><p>${st.notice}</p>
+    <h4>Off-ramps</h4><p>${st.off}</p>
+    <h4>How strong is the evidence</h4><p>${st.ev}</p>`;
+
+  document.querySelectorAll("#vuln button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.v===state.v));
+  document.querySelectorAll(".tog").forEach(b=>b.setAttribute("aria-pressed",state.a[b.dataset.a]));
+}
+document.querySelectorAll("#vuln button").forEach(b=>b.onclick=()=>{state.v=+b.dataset.v;render()});
+document.querySelectorAll(".tog").forEach(b=>b.onclick=()=>{state.a[b.dataset.a]=!state.a[b.dataset.a];render()});
+render();
+</script>
+</body>
+</html>
