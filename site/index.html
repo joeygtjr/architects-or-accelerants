@@ -159,6 +159,20 @@ h3{font-size:1.3rem;line-height:1.25;margin:0 0 8px;letter-spacing:-0.01em}
 @media (max-width:900px){.pw{grid-template-columns:1fr}}
 .controls{display:flex;flex-wrap:wrap;gap:24px 40px;padding:22px 24px;margin-bottom:28px}
 .controls h3{font-size:.95rem;margin:0 0 10px}
+/* Interactivity cues: label, numbered steps, hover states, a one-time nudge on the accelerant switches. */
+.controls .try{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;max-width:none;margin:0;padding-bottom:16px;border-bottom:1px solid var(--line);font-size:.9rem}
+.badge{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--ember-soft);color:var(--ink);padding:3px 8px;border-radius:3px}
+.step{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--paper);font-size:.75rem;font-weight:800;margin-right:8px;vertical-align:1px}
+.pathhint{font-size:.95rem;font-weight:600;margin:0 0 14px}
+.seg button:not([aria-pressed="true"]):hover{background:var(--paper)}
+.tog:hover{border-color:var(--ink)}
+@keyframes nudge{0%,100%{box-shadow:0 0 0 0 rgba(224,138,0,0)}50%{box-shadow:0 0 0 5px rgba(224,138,0,.35)}}
+.toggles.hint .tog{animation:nudge 1.8s ease-in-out .4s 4}
+@keyframes bump{from{transform:scale(1.12)}to{transform:none}}
+.readout .count.bump{animation:bump .35s ease-out}
+.readout .count{transform-origin:left center}
+.readout .nudge{font-size:.85rem;opacity:.75}
+.readout .nudge:empty{display:none}
 .controls p{font-size:.84rem;color:var(--muted);margin:8px 0 0;max-width:24rem}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
 .seg button{background:transparent;border:0;border-right:1px solid var(--line);padding:8px 16px;cursor:pointer;font-size:.92rem}
@@ -172,7 +186,10 @@ h3{font-size:1.3rem;line-height:1.25;margin:0 0 8px;letter-spacing:-0.01em}
 .tog[aria-pressed="true"] .sw{background:var(--ember-bright)}
 .tog[aria-pressed="true"] .sw::after{transform:translateX(12px)}
 .origin{font-size:.9rem;color:var(--muted);padding:0 0 12px 18px;border-left:3px solid var(--line)}
-.stage{display:block;width:100%;text-align:left;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--ink);border-radius:4px;padding:14px 18px}
+.stage{position:relative;display:block;width:100%;text-align:left;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--ink);border-radius:4px;padding:14px 48px 14px 18px}
+.stage::after{content:"\203A";position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:1.7rem;line-height:1;color:var(--muted);transition:transform .2s,color .2s}
+.stage:hover::after,.stage[aria-pressed="true"]::after{color:var(--ink)}
+.stage:hover::after{transform:translate(3px,-50%)}
 .stage:hover{border-color:var(--ink)}
 .stage[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
 .stage .n{font-weight:800;font-size:.85rem;color:var(--muted);margin-right:10px}
@@ -189,6 +206,26 @@ h3{font-size:1.3rem;line-height:1.25;margin:0 0 8px;letter-spacing:-0.01em}
 .bar.gone{background:transparent;color:var(--muted);border:2px dashed var(--ember-bright)}
 .bar.gone .t{text-decoration:line-through;text-decoration-color:var(--ember-bright)}
 .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:.8rem;color:var(--muted);margin:16px 0 0}
+/* Firebreaks-vs-likelihood chart at the end of the pathway section. */
+.odds{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:32px;align-items:center;padding:28px;margin-top:40px}
+@media (max-width:900px){.odds{grid-template-columns:1fr;padding:22px}}
+.odds h3{font-size:1.35rem;margin:0 0 10px}
+.odds p{margin:0 0 12px;font-size:.95rem}
+.odds .odds-now{margin:16px 0 0;padding:12px 14px;border-left:4px solid var(--ember-bright);background:var(--ember-soft);font-size:.92rem}
+.odds svg{display:block;width:100%;height:auto}
+.odds .ax{stroke:var(--line);stroke-width:1.5}
+.odds .grid{stroke:var(--line);stroke-dasharray:3 5}
+.odds .lbl{fill:var(--muted);font-size:13px;font-family:inherit}
+.odds .ttl{fill:var(--ink);font-size:13px;font-weight:600;font-family:inherit}
+.odds .curve{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.odds .area{fill:var(--ember-soft)}
+.odds .off{fill:var(--line);opacity:.45}
+.odds .offlbl{fill:var(--muted);font-size:12px;font-style:italic;font-family:inherit}
+.odds .drop{stroke:var(--ember-bright);stroke-width:1.5;stroke-dasharray:4 4}
+.odds .mark{transition:transform .5s ease}
+.odds .mark circle.halo{fill:var(--ember-bright);opacity:.25}
+.odds .mark circle.dot{fill:var(--ember-bright);stroke:var(--surface);stroke-width:3}
+.odds .mark text{fill:var(--ink);font-size:13px;font-weight:700;font-family:inherit}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{display:inline-block;width:18px;height:12px;border-radius:2px}
 .legend .l1{background:var(--teal)}.legend .l2{border:2px dashed var(--teal)}.legend .l3{border:2px dashed var(--ember-bright)}
@@ -444,8 +481,9 @@ footer li{margin-bottom:6px;break-inside:avoid}
     <h2>The fuel is human. AI clears the firebreaks.</h2>
     <p class="intro">Kunst et al. (2026) map radicalization in four stages and argue AI acts as a catalyst that removes the ordinary friction stopping most people partway. <strong>Set the conditions</strong> and watch which barriers weaken. Select a stage for what it looks like and where to intervene.</p>
     <div class="card controls">
+      <p class="try"><span class="badge">Interactive</span>Change the settings below. The barriers and the count update as you go.</p>
       <div>
-        <h3 id="vlab">Predisposing vulnerability</h3>
+        <h3 id="vlab"><span class="step" aria-hidden="true">1</span>Set predisposing vulnerability</h3>
         <div class="seg" role="group" aria-labelledby="vlab" id="vuln">
           <button data-v="0" aria-pressed="false">Low</button>
           <button data-v="1" aria-pressed="true">Moderate</button>
@@ -454,7 +492,7 @@ footer li{margin-bottom:6px;break-inside:avoid}
         <p>Isolation, identity uncertainty, need for certainty, grievance.</p>
       </div>
       <div>
-        <h3 id="alab">AI accelerants</h3>
+        <h3 id="alab"><span class="step" aria-hidden="true">2</span>Switch on AI accelerants</h3>
         <div class="toggles" role="group" aria-labelledby="alab">
           <button class="tog" data-a="rec" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Recommendation engine</button>
           <button class="tog" data-a="swarm" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Bot swarms</button>
@@ -464,13 +502,25 @@ footer li{margin-bottom:6px;break-inside:avoid}
       </div>
     </div>
     <div class="pw">
-      <div id="path"></div>
+      <div>
+        <p class="pathhint"><span class="step" aria-hidden="true">3</span>Select a stage to see what it looks like and where to intervene.</p>
+        <div id="path"></div>
+      </div>
       <aside class="side">
-        <div class="readout" aria-live="polite"><div class="count" id="count"></div><p id="summary"></p></div>
+        <div class="readout" aria-live="polite"><div class="count" id="count"></div><p id="summary"></p><p class="nudge" id="nudge"></p></div>
         <div class="card detail" id="detail" aria-live="polite"></div>
       </aside>
     </div>
-    <p class="note" style="margin-top:20px">Illustrative model for training, not a risk tool. People stall, cycle, skip stages, and exit. Barrier mappings are simplified from Kunst et al. (2026) and Simi &amp; Windisch (2017).</p>
+    <div class="card odds">
+      <div class="odds-text">
+        <h3>Fewer firebreaks, a longer run.</h3>
+        <p>Each firebreak is another chance for the path to stall. Take them away and those chances stack up in the person's favor instead: the path is more likely to run on toward extreme belief, belonging, and eventually violence.</p>
+        <p>The last firebreaks are the hardest to clear. Moral qualms and the need for a trigger do not fall to technology alone, which is why part of the curve stays out of reach.</p>
+        <p class="odds-now" id="oddsnow" aria-live="polite"></p>
+      </div>
+      <svg id="odds" viewBox="0 0 560 270" role="img" aria-labelledby="oddsdesc"><desc id="oddsdesc">A rising curve. As the number of firebreaks holding falls from 12 to 0, the chance that the path runs on rises, slowly at first and then steeply. A marker shows the current settings.</desc></svg>
+    </div>
+    <p class="note" style="margin-top:20px">Illustrative model for training, not a risk tool. The curve shows direction, not measured probabilities. People stall, cycle, skip stages, and exit. Barrier mappings are simplified from Kunst et al. (2026) and Simi &amp; Windisch (2017).</p>
   </div>
 </section>
 
@@ -908,9 +958,9 @@ function bwhy(b,st){if(st==="solid")return"";
   const who=b.by.filter(k=>(k==="v1"&&PS.v>=1)||(k==="v2"&&PS.v>=2)||PS.a[k]).map(k=>LABELS[k]);
   return(st==="gone"?"Cleared by ":"Weakened by ")+who.join(" and ")}
 function renderPath(){
-  let h=`<div class="origin">Everyday feed</div>`,solid=0,worst=0,wl=-1;
+  let h=`<div class="origin">Everyday feed</div>`,solid=0,weak=0,worst=0,wl=-1;
   GAPS.forEach((g,i)=>{let loss=0,cells="";
-    g.bars.forEach(b=>{const st=bstat(b,g);if(st==="solid")solid++;else loss+=st==="weak"?.5:1;
+    g.bars.forEach(b=>{const st=bstat(b,g);if(st==="solid")solid++;else if(st==="weak")weak++;if(st!=="solid")loss+=st==="weak"?.5:1;
       const w=bwhy(b,st);cells+=`<div class="bar ${st==="solid"?"":st}"><span class="t">${b.t}</span>${w?`<span class="why">${w}</span>`:""}</div>`});
     if(loss>wl&&i<3){wl=loss;worst=i}
     h+=`<div class="gap ${loss>=1.5?"hot":""}"><p class="gap-label">${g.label}</p><div class="bars">${cells}</div></div>`;
@@ -919,20 +969,69 @@ function renderPath(){
   h+=`<div class="legend"><span><i class="l1"></i>Holding</span><span><i class="l2"></i>Weakened</span><span><i class="l3"></i>Cleared</span></div>`;
   $("#path").innerHTML=h;
   $$("#path .stage").forEach(b=>b.onclick=()=>{PS.sel=+b.dataset.s;renderPath()});
-  $("#count").innerHTML=`${solid} of 12<small>firebreaks holding</small>`;
+  const cnt=$("#count"),prev=cnt.dataset.n;cnt.dataset.n=solid;
+  cnt.innerHTML=`${solid} of 12<small>firebreaks holding</small>`;
+  if(prev!==undefined&&+prev!==solid){cnt.classList.remove("bump");void cnt.offsetWidth;cnt.classList.add("bump")}
   const anyA=Object.values(PS.a).some(Boolean),names=["first contact","beliefs hardening","belonging"];let s;
   if(!anyA&&PS.v===0)s="Low vulnerability, no accelerants: the ordinary friction of offline life stays in place. This describes most people who ever see extremist content.";
   else if(!anyA)s="Vulnerability alone wears some barriers down, but the path is still slow and effortful. Closer to how radicalization worked before engagement-optimized platforms.";
   else if(PS.v===0)s="The accelerants weaken barriers but clear none. Without a vulnerability to fit, the system cycles through content instead of capturing the person. The fuel is human.";
   else s=`The biggest loss is in the barriers to ${names[worst]}. The barriers to violence still largely hold, which is why the move to action is where warning behaviors surface and where intervention has the most to work with.`;
   $("#summary").textContent=s;
+  $("#nudge").textContent=anyA?"":"Next: switch on an AI accelerant above to see which firebreaks it clears.";
   const st=STAGES[PS.sel];
   $("#detail").innerHTML=`<h3>${st.n}. ${st.name}</h3><h4>What happens</h4><p>${st.what}</p><h4>Where AI speeds it up</h4><p>${st.ai}</p><h4>In the six cases</h4><p>${st.cases}</p><h4>Off-ramps</h4><p>${st.off}</p>`;
   $$("#vuln button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.v===PS.v));
   $$("#pathway .tog").forEach(b=>b.setAttribute("aria-pressed",PS.a[b.dataset.a]));
+  renderOdds(solid,weak);
 }
+/* Firebreaks vs. likelihood. Weakened barriers count as half. Each holding firebreak is treated as
+   another independent chance to stall, so the chance of running on is R^holding: illustrative shape only. */
+const ODDS={R:.72,L:52,Rt:548,T:18,B:222};
+const oddsX=h=>ODDS.L+(12-h)/12*(ODDS.Rt-ODDS.L);
+const oddsY=h=>ODDS.B-Math.pow(ODDS.R,h)*(ODDS.B-ODDS.T);
+// The fewest firebreaks any combination of settings can leave (the barriers to violence never fully fall).
+const oddsMin=(()=>{const keep=JSON.stringify(PS);let m=12;
+  for(let v=0;v<3;v++)for(let n=0;n<8;n++){PS.v=v;PS.a={rec:!!(n&1),swarm:!!(n&2),comp:!!(n&4)};
+    let h=0;GAPS.forEach(g=>g.bars.forEach(b=>{const st=bstat(b,g);h+=st==="solid"?1:st==="weak"?.5:0}));m=Math.min(m,h)}
+  Object.assign(PS,JSON.parse(keep));return m})();
+(function(){
+  const svg=$("#odds"),{L,Rt,T,B}=ODDS;
+  let area=`M${L},${B}`,line="";
+  for(let h=12;h>=0;h-=.25){const x=oddsX(h).toFixed(1),y=oddsY(h).toFixed(1);area+=`L${x},${y}`;line+=(line?"L":"M")+x+","+y}
+  el("rect",{class:"off",x:oddsX(oddsMin),y:T,width:Rt-oddsX(oddsMin),height:B-T},svg);
+  el("path",{class:"area",d:area+`L${Rt},${B}Z`},svg);
+  [3,6,9].forEach(h=>el("line",{class:"grid",x1:oddsX(h),x2:oddsX(h),y1:T,y2:B},svg));
+  el("line",{class:"ax",x1:L,x2:Rt,y1:B,y2:B},svg);el("line",{class:"ax",x1:L,x2:L,y1:T,y2:B},svg);
+  el("path",{class:"curve",d:line},svg);
+  [12,9,6,3,0].forEach(h=>el("text",{class:"lbl",x:oddsX(h),y:B+20,"text-anchor":"middle"},svg,h));
+  el("text",{class:"ttl",x:(L+Rt)/2,y:B+42,"text-anchor":"middle"},svg,"Firebreaks holding → fewer");
+  el("text",{class:"ttl",x:-(T+B)/2,y:16,transform:"rotate(-90)","text-anchor":"middle"},svg,"Chance the path runs on");
+  el("text",{class:"lbl",x:L-8,y:B-4,"text-anchor":"end"},svg,"Low");
+  el("text",{class:"lbl",x:L-8,y:T+10,"text-anchor":"end"},svg,"High");
+  const ox=oddsX(oddsMin)-8;
+  el("text",{class:"offlbl",x:ox,y:T+14,"text-anchor":"end"},svg,"Shaded: out of reach →");
+  el("text",{class:"offlbl",x:ox,y:T+30,"text-anchor":"end"},svg,"moral qualms and a trigger still hold");
+  const m=el("g",{class:"mark"},svg);
+  el("line",{class:"drop",x1:0,x2:0,y1:0,y2:0,id:"oddsdrop"},m);
+  el("circle",{class:"halo",r:14},m);el("circle",{class:"dot",r:7},m);
+  el("text",{x:0,y:-20,"text-anchor":"middle"},m,"Now");
+})();
+function renderOdds(solid,weak){
+  const h=solid+weak*.5,x=oddsX(h),y=oddsY(h);
+  $("#odds .mark").style.transform=`translate(${x}px,${y}px)`;
+  $("#oddsdrop").setAttribute("y2",(ODDS.B-y).toFixed(1));
+  const p=Math.pow(ODDS.R,h),lvl=p<.08?"low":p<.2?"rising":p<.4?"high":"very high";
+  $("#oddsnow").innerHTML=solid===12?`<strong>Now:</strong> all 12 firebreaks hold. Most paths stall early.`:
+    `<strong>Now:</strong> ${solid} holding${weak?`, ${weak} weakened`:""}. The chance the path runs on is <strong>${lvl}</strong> compared with someone whose firebreaks all hold.`;
+}
+// Pulse the accelerant switches once the controls scroll into view, until someone uses them.
+let touched=false;const tg=$("#pathway .toggles");
+const stopHint=()=>{touched=true;tg.classList.remove("hint")};
+const hio=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){hio.disconnect();if(!touched)tg.classList.add("hint")}},{threshold:1});
+hio.observe(tg);
 $$("#vuln button").forEach(b=>b.onclick=()=>{PS.v=+b.dataset.v;renderPath()});
-$$("#pathway .tog").forEach(b=>b.onclick=()=>{PS.a[b.dataset.a]=!PS.a[b.dataset.a];renderPath()});
+$$("#pathway .tog").forEach(b=>b.onclick=()=>{stopHint();PS.a[b.dataset.a]=!PS.a[b.dataset.a];renderPath()});
 renderPath();
 
 /* ---------- scorecard ---------- */
