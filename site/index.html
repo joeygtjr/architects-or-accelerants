@@ -92,10 +92,13 @@ h3{font-size:1.3rem;line-height:1.25;margin:0 0 8px;letter-spacing:-0.01em}
 .tl{position:relative;margin:8px 0 28px}
 .tl .axis{position:absolute;left:0;right:0;top:85px;height:2px;background:var(--line)}
 .tl .nodes{position:relative;height:170px;margin:0 60px}
-.node{position:absolute;top:0;height:170px;width:128px;transform:translateX(-50%);background:none;border:0;cursor:pointer;padding:0}
+.node{position:absolute;width:128px;transform:translateX(-50%);background:none;border:0;cursor:pointer;padding:0}
+/* Each button covers only its own side of the axis, so neighbouring cases never overlap. */
+.node.up{top:0;height:96px}.node.down{top:76px;height:94px}
 .node .dot{position:absolute;left:50%;top:76px;margin-left:-10px;width:20px;height:20px;border-radius:50%;background:var(--surface);border:3px solid var(--ink);transition:box-shadow .2s}
 .node .lab{position:absolute;left:0;right:0;text-align:center}
-.node.up .lab{bottom:100px}.node.down .lab{top:100px}
+.node.down .dot{top:0}
+.node.up .lab{bottom:26px}.node.down .lab{top:24px}
 .node .pl{display:block;font-weight:700;font-size:.92rem;line-height:1.2}
 .node .yr{display:block;font-size:.76rem;color:var(--muted)}
 .node:hover .dot{box-shadow:0 0 0 5px var(--line)}
@@ -106,6 +109,7 @@ h3{font-size:1.3rem;line-height:1.25;margin:0 0 8px;letter-spacing:-0.01em}
   .node{position:static;transform:none;width:auto;height:auto;border:1px solid var(--line);border-radius:6px;padding:10px 6px;background:var(--surface)}
   .node .dot{position:static;display:block;margin:0 auto 6px}
   .node .lab{position:static}
+  .node.up,.node.down{height:auto}
 }
 .casebox{display:grid;grid-template-columns:1.1fr 1fr;gap:0;overflow:hidden}
 @media (max-width:820px){.casebox{grid-template-columns:1fr}}
@@ -349,8 +353,8 @@ footer li{margin-bottom:6px;break-inside:avoid}
     <p class="sub">Do social media and AI create violent extremists, or speed up people who were already on the way? The answer decides where prevention money goes, and what it costs in speech, privacy, and trust.</p>
 
     <figure class="funnel" aria-labelledby="funcap">
-      <svg id="funnel" viewBox="0 0 1000 250" role="img" aria-label="Many dots representing people with grievances start on the left. Most drop away before extreme belief, and nearly all drop away before violence. One reaches the end."></svg>
-      <figcaption class="cap" id="funcap">Grievances are common. Extreme belief is less common. Violence is rare. The question for this project is what technology does to that gap. Illustrative, not to scale.</figcaption>
+      <svg id="funnel" viewBox="0 0 1000 285" role="img" aria-label="Forty-eight dots, each a person with a grievance, move left to right. At the first barrier, before extreme belief, 39 hit the wall and fall into a pile. At the second barrier, before violence, 8 more are stopped. One passes through a gap in both barriers and reaches the end."></svg>
+      <figcaption class="cap" id="funcap">Each dot is a person with a grievance. Most never reach violence because something stops them: <span style="color:#45A59E;font-weight:600">barriers</span> such as other people, doubt, or moral qualms. The question for this project is what technology does to those barriers. Illustrative, not to scale.</figcaption>
     </figure>
 
     <div class="poll">
@@ -648,36 +652,54 @@ function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localSto
 /* ---------- hero funnel ---------- */
 (function(){
   const svg=$("#funnel");
+  const F="Public Sans, sans-serif", TEAL="#45A59E", MUTED="#93A2AE";
   el("polygon",{points:"20,28 330,72 640,106 985,114 985,126 640,134 330,168 20,212",fill:"rgba(147,162,174,.08)"},svg);
-  [[330,"Adopt extreme beliefs"],[640,"Act violently"]].forEach(([x,t])=>{
-    el("line",{x1:x,x2:x,y1:20,y2:222,stroke:"#2B3A46","stroke-dasharray":"4 5"},svg);
-    el("text",{x:x+8,y:18,fill:"#93A2AE","font-size":"15","font-family":"Public Sans, sans-serif"},svg,t);
+  // Barriers: teal walls across the funnel at each stage, each with one narrow gap at the centre line.
+  const B=[{x:330,top:72,bot:168,label:"Adopt extreme beliefs",n:39},{x:640,top:106,bot:134,label:"Act violently",n:8}];
+  B.forEach(b=>{
+    el("line",{x1:b.x,x2:b.x,y1:20,y2:222,stroke:"#2B3A46","stroke-dasharray":"4 5"},svg);
+    el("text",{x:b.x+8,y:18,fill:MUTED,"font-size":"15","font-family":F},svg,b.label);
+    el("rect",{x:b.x-3,y:b.top,width:6,height:115-b.top,rx:2,fill:TEAL},svg);
+    el("rect",{x:b.x-3,y:125,width:6,height:b.bot-125,rx:2,fill:TEAL},svg);
+    el("text",{x:b.x-14,y:272,fill:TEAL,"font-size":"15","font-weight":"600","text-anchor":"end","font-family":F},svg,`${b.n} stopped by barriers`);
   });
-  el("text",{x:20,y:18,fill:"#93A2AE","font-size":"15","font-family":"Public Sans, sans-serif"},svg,"Hold a grievance");
+  el("text",{x:20,y:18,fill:MUTED,"font-size":"15","font-family":F},svg,"Hold a grievance");
+  el("text",{x:975,y:152,fill:"#E08A00","font-size":"15","font-weight":"600","text-anchor":"end","font-family":F},svg,"1 gets through");
   let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
-  const dots=[];
+  // Point on the wall where a dot hits, avoiding the gap.
+  const hitY=b=>{const up=rnd()<.5;return up?b.top+6+rnd()*(115-b.top-12):125+6+rnd()*(b.bot-125-12)};
+  // Stopped dots settle in a pile at the foot of the barrier that stopped them.
+  const pile=(b,k)=>[b.x-12-(k%13)*11,248-Math.floor(k/13)*11];
+  const dots=[];let k0=0,k1=0;
   for(let i=0;i<48;i++){
-    const x0=24+rnd()*90, y0=40+rnd()*160;
-    let xf,yf,kind;
-    if(i<39){kind=0;xf=150+rnd()*170;yf=232+rnd()*14}
-    else if(i<47){kind=1;xf=380+rnd()*240;yf=232+rnd()*14}
-    else{kind=2;xf=960;yf=120}
+    const x0=24+rnd()*90, y0=40+rnd()*160, gap=[330,120];
+    let pts,kind;
+    if(i<39){kind=0;const y=hitY(B[0]);pts=[[x0,y0],[323,y],[317,y],pile(B[0],k0++)]}
+    else if(i<47){kind=1;const y=hitY(B[1]);pts=[[x0,y0],gap,[633,y],[627,y],pile(B[1],k1++)]}
+    else{kind=2;pts=[[x0,y0],gap,[640,120],[960,120]]}
     const c=el("circle",{cx:x0,cy:y0,r:kind===2?8:5,fill:kind===2?"#E08A00":"#E6ECEF",opacity:.9},svg);
-    dots.push({c,x0,y0,xf,yf,kind,d:rnd()*0.25});
+    dots.push({c,pts,kind,d:rnd()*0.25});
   }
   const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+  // Stopped dots: travel to the wall (0-.6), bounce back off it (.6-.68), then fall into the pile (.68-1).
+  const STOP=[0,.6,.68,1];
+  function at(o,e){
+    const n=o.pts.length-1;let i,u;
+    if(o.kind===2){const s=Math.min(n-1e-9,e*n);i=Math.floor(s);u=s-i}
+    else{const T=o.kind===1?[0,.3,.6,.68,1]:STOP;i=T.findIndex((v,j)=>e<=T[j+1]);if(i<0)i=n-1;u=(e-T[i])/(T[i+1]-T[i]);
+      u=i===n-1?u*u:ease(u)}
+    const a=o.pts[i],b=o.pts[i+1];return [a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u,i===n-1?u:0]
+  }
   function frame(p){
     dots.forEach(o=>{
-      const t=Math.min(1,Math.max(0,(p-o.d)/(1-o.d))), e=ease(t);
-      let x=o.x0+(o.xf-o.x0)*e, y;
-      if(o.kind===2){ y=o.y0+(o.yf-o.y0)*e }
-      else { const drop=Math.max(0,(e-.7)/.3); const mid=120+(o.y0-120)*(1-e*.6); y=mid+(o.yf-mid)*drop }
+      const t=Math.min(1,Math.max(0,(p-o.d)/(1-o.d)));
+      const [x,y,fall]=at(o,o.kind===2?ease(t):t);
       o.c.setAttribute("cx",x.toFixed(1));o.c.setAttribute("cy",y.toFixed(1));
-      if(o.kind<2)o.c.setAttribute("opacity",(0.9-0.62*Math.max(0,(e-.7)/.3)).toFixed(2));
+      if(o.kind<2){o.c.setAttribute("opacity",(0.9-0.4*fall).toFixed(2));if(fall>0)o.c.setAttribute("fill",MUTED)}
     });
   }
   if(reduce){frame(1);return}
-  const dur=4200;let start=null;
+  const dur=5200;let start=null;
   function go(ts){if(start===null)start=ts;const p=Math.min(1,(ts-start)/dur);frame(p);if(p<1)requestAnimationFrame(go)}
   frame(0);setTimeout(()=>requestAnimationFrame(go),500);
 })();
@@ -736,10 +758,13 @@ const CASES=[
   tags:["Allegations only","AI at capability"]}
 ];
 (function(){
-  const nodes=$("#nodes");const lo=2018.3,hi=2025.9;
+  const nodes=$("#nodes");const lo=2018.3,hi=2025.9,GAP=7;
+  // Place by date, then nudge cases that fall close together (Pirkkala and New York are weeks apart) to a minimum spacing.
+  const pos=CASES.map(c=>(c.y-lo)/(hi-lo)*100);
+  for(let i=1;i<pos.length;i++)if(pos[i]-pos[i-1]<GAP){const m=(pos[i]+pos[i-1])/2;pos[i-1]=Math.min(pos[i-1],m-GAP/2);pos[i]=m+GAP/2}
   CASES.forEach((c,i)=>{
     const b=document.createElement("button");
-    b.className="node "+(i%2?"down":"up");b.style.left=((c.y-lo)/(hi-lo)*100)+"%";
+    b.className="node "+(i%2?"down":"up");b.style.left=pos[i]+"%";
     b.setAttribute("aria-pressed","false");b.dataset.id=c.id;
     b.innerHTML=`<span class="dot" aria-hidden="true"></span><span class="lab"><span class="pl">${c.pl}</span><span class="yr">${c.c}, ${c.date}</span></span>`;
     b.onclick=()=>showCase(c.id);nodes.appendChild(b);
@@ -931,7 +956,7 @@ const ROWS=[
   for(let a=8;a<=20;a++){el("line",{x1:X(a),x2:X(a),y1:ax-4,y2:ax+4,stroke:"var(--ink)"},s)}
   [[10,"UK"],[12,"Netherlands"],[14,"Germany"]].forEach(([a,c])=>{
     el("line",{x1:X(a),x2:X(a),y1:ax+52,y2:ax+72,stroke:"var(--teal)","stroke-width":4},s);
-    el("text",{x:X(a),y:ax+92,"text-anchor":"middle","font-size":"13","font-weight":"600",fill:"var(--teal)","font-family":F},s,c+" "+a);
+    el("text",{x:X(a),y:ax+92,"text-anchor":"middle","font-size":"15","font-weight":"600",fill:"var(--teal)","font-family":F},s,c+" "+a);
   });
   el("text",{x:X(8),y:ax+92,"font-size":"12",fill:"var(--muted)","font-family":F,"text-anchor":"start"},s,"");
   const M=[[8,"Children as young as 8","targeted via gaming",96],[12,"Wisconsin","nihilist Telegram channel",56],[14,"Sydney","earlier plot investigated",96],[15,"Zurich","antisemitic attack",56],[16,"Pirkkala","school stabbing",96],[17,"Southport","dance class",56]];
